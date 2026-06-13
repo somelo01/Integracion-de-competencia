@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ============================================================
+       ADMIN/USERS.HTML - GESTIÓN DE USUARIOS
+       ============================================================
+       Tabla con todos los usuarios del sistema.
+       Muestra: ID, nombre, email, rol (badge) y botón eliminar.
+       
+       Los usuarios con rol "Admin" no se pueden eliminar
+       (el botón está deshabilitado).
+       
+       REQUIERE ROL ADMIN.
+       
+       Endpoints:
+         GET    /api/admin/usuarios     → listar todos
+         DELETE /api/admin/usuarios/:id → eliminar
+       ============================================================ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Usuarios - Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+  <main class="container py-4" id="admin-users">
+    <h2 class="mb-4">
+      <i class="bi bi-people me-2"></i>Gestión de Usuarios
+    </h2>
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="/pages/admin/dashboard.html">
+            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+          </a>
+        </li>
+        <li class="breadcrumb-item active">Usuarios</li>
+      </ol>
+    </nav>
+
+    <!-- Contenedor de alertas -->
+    <div id="users-alerts"></div>
+
+    <!-- ============================================================
+         TABLA DE USUARIOS
+         ============================================================
+         Lista todos los usuarios registrados con su rol.
+         El botón eliminar está deshabilitado para admins
+         (no puedes eliminar a otro admin).
+         ============================================================ -->
+    <div class="table-responsive">
+      <table class="table table-hover table-admin align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="users-body">
+          <!-- Se carga dinámicamente con admin.js -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="footer-custom">
+    <div class="container">
+      <p class="mb-0">&copy; 2026 Ensigna - Panel de Administración</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

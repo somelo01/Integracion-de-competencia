@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ============================================================
+       CHECKOUT.HTML - CONFIRMACIÓN Y PAGO
+       ============================================================
+       Muestra un resumen del pedido (productos del carrito) y
+       un botón para confirmar y pagar con Webpay.
+       
+       FLUJO:
+       1. Se cargan los ítems del carrito como resumen (no editable)
+       2. El usuario hace click en "Confirmar y Pagar"
+       3. JS crea el pedido (POST /api/pedidos/crear)
+       4. JS inicia el pago (POST /api/pagos/crear)
+       5. Se redirige a Webpay para que el usuario pague
+       
+       REQUIERE AUTENTICACIÓN.
+       
+       Referencia: Imagen 6 - Flujo de pago con Webpay
+       ============================================================ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmar Pedido - Ensigna </title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+  <main class="container py-4">
+    <h2 class="mb-4">
+      <i class="bi bi-credit-card me-2"></i>Confirmar Pedido
+    </h2>
+
+    <!-- Contenedor de alertas -->
+    <div id="checkout-alerts"></div>
+
+    <div class="row">
+      <!-- ============================================================
+           RESUMEN DEL PEDIDO
+           ============================================================
+           Tabla con los productos del carrito (solo lectura).
+           Para editar, el usuario debe volver al carrito.
+           ============================================================ -->
+      <div class="col-lg-8">
+        <div class="card mb-4">
+          <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">
+              <i class="bi bi-bag-check me-2"></i>Resumen de tu compra
+            </h5>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th class="text-center">Cantidad</th>
+                    <th>Precio Unit.</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody id="checkout-items">
+                  <!-- Se carga dinámicamente con checkout.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Link para volver al carrito -->
+        <a href="/pages/cart.html" class="btn btn-outline-secondary">
+          <i class="bi bi-arrow-left me-1"></i>Volver al carrito
+        </a>
+      </div>
+
+      <!-- ============================================================
+           PANEL DE PAGO (columna derecha)
+           ============================================================
+           Muestra el total y el botón para procesar el pago.
+           El botón ejecuta processPayment() de checkout.js.
+           ============================================================ -->
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+              <i class="bi bi-cash-stack me-2"></i>Total a Pagar
+            </h5>
+          </div>
+          <div class="card-body text-center">
+            <!-- Total calculado -->
+            <p class="cart-total fs-2 mb-4" id="checkout-total">$0</p>
+
+            <!-- Información de pago -->
+            <p class="text-muted small mb-3">
+              <i class="bi bi-shield-check me-1"></i>
+              Pago seguro procesado por Webpay (Transbank)
+            </p>
+
+            <!-- Botón de pago -->
+            <button class="btn btn-primary btn-lg w-100" id="btn-pay">
+              <i class="bi bi-credit-card me-2"></i>Confirmar y Pagar
+            </button>
+
+            <p class="text-muted small mt-3">
+              Al confirmar, serás redirigido a Webpay para completar el pago.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer-custom">
+    <div class="container">
+      <p class="mb-0">&copy; 2026 Ensigna - Proyecto Educativo</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/checkout.js"></script>
+</body>
+</html>

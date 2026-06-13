@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ============================================================
+       SUPPORT.HTML - SOPORTE Y TICKETS
+       ============================================================
+       Página con dos secciones:
+       1. Formulario para crear un nuevo ticket de soporte
+       2. Lista de tickets existentes del usuario
+       
+       TIPOS DE TICKET:
+       - Consulta: pregunta general
+       - Reembolso: requiere seleccionar un pedido
+       - Problema Técnico: error en la plataforma
+       - Otro: cualquier otro tema
+       
+       Si el usuario llega desde un pedido (botón "Solicitar reembolso"),
+       la URL trae parámetros: ?tipo=Reembolso&pedido=42
+       y el formulario se pre-llena automáticamente.
+       
+       REQUIERE AUTENTICACIÓN.
+       
+       Endpoints:
+         POST /api/soporte/crear → crear ticket
+         GET  /api/soporte       → listar tickets
+       ============================================================ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soporte - Ensigna </title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+  <main class="container py-4">
+    <h2 class="mb-4">
+      <i class="bi bi-headset me-2"></i>Centro de Soporte
+    </h2>
+
+    <!-- Contenedor de alertas -->
+    <div id="support-alerts"></div>
+
+    <div class="row">
+      <!-- ============================================================
+           FORMULARIO DE NUEVO TICKET (columna izquierda)
+           ============================================================ -->
+      <div class="col-lg-5 mb-4">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+              <i class="bi bi-plus-circle me-2"></i>Crear Nuevo Ticket
+            </h5>
+          </div>
+          <div class="card-body">
+            <form id="support-form" novalidate>
+
+              <!-- Campo: Asunto -->
+              <div class="mb-3">
+                <label for="support-asunto" class="form-label">Asunto</label>
+                <input type="text"
+                       class="form-control"
+                       id="support-asunto"
+                       placeholder="Describe brevemente tu consulta"
+                       required
+                       minlength="5"
+                       maxlength="200">
+                <small class="text-muted">Entre 5 y 200 caracteres.</small>
+              </div>
+
+              <!-- Campo: Tipo de ticket -->
+              <div class="mb-3">
+                <label for="support-tipo" class="form-label">Tipo</label>
+                <select class="form-select" id="support-tipo" required>
+                  <option value="">Selecciona un tipo...</option>
+                  <option value="Consulta">Consulta</option>
+                  <option value="Reembolso">Reembolso</option>
+                  <option value="Problema Técnico">Problema Técnico</option>
+                  <option value="Otro">Otro</option>
+                </select>
+              </div>
+
+              <!-- Campo: Pedido asociado (solo para Reembolso) -->
+              <!-- Se muestra/oculta dinámicamente con JS -->
+              <div class="mb-3" id="pedido-group" style="display: none;">
+                <label for="support-pedido" class="form-label">
+                  Pedido asociado <span class="text-danger">*</span>
+                </label>
+                <select class="form-select" id="support-pedido">
+                  <option value="">Selecciona un pedido...</option>
+                  <!-- Se cargan dinámicamente los pedidos del usuario -->
+                </select>
+                <small class="text-muted">Obligatorio para solicitudes de reembolso.</small>
+              </div>
+
+              <!-- Campo: Comentarios -->
+              <div class="mb-3">
+                <label for="support-comentarios" class="form-label">Comentarios</label>
+                <textarea class="form-control"
+                          id="support-comentarios"
+                          rows="4"
+                          placeholder="Describe tu problema o consulta con detalle..."></textarea>
+              </div>
+
+              <!-- Botón de envío -->
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-send me-1"></i>Enviar Ticket
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           LISTA DE TICKETS EXISTENTES (columna derecha)
+           ============================================================
+           Muestra los tickets del usuario como tarjetas expandibles.
+           Al hacer click en una tarjeta, se expande para mostrar
+           los detalles y la respuesta del admin (si existe).
+           ============================================================ -->
+      <div class="col-lg-7">
+        <h4 class="mb-3">
+          <i class="bi bi-list-task me-2"></i>Mis Tickets
+        </h4>
+        <div id="tickets-list">
+          <!-- Se carga dinámicamente con JavaScript -->
+          <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Cargando tickets...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer-custom">
+    <div class="container">
+      <p class="mb-0">&copy; 2026 Ensigna  - Proyecto Educativo</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/support.js"></script>
+</body>
+</html>

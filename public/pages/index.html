@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ============================================================
+       INDEX.HTML - PÁGINA DE INICIO (LANDING PAGE)
+       ============================================================
+       Esta es la primera página que ve el usuario al entrar a la
+       tienda. Contiene:
+       1. Hero section: banner principal con CTA (Call to Action)
+       2. Productos destacados: grid de 4 productos populares
+       3. Secciones informativas: por qué elegirnos, etc.
+       
+       NO REQUIERE AUTENTICACIÓN: cualquier visitante puede verla.
+       
+       SCRIPTS: utils.js (navbar, apiRequest) + catalog.js (loadFeaturedProducts)
+       
+       Referencia: Imagen 1 - Wireframe de la landing page
+       ============================================================ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ensigna - Ropa de Culto</title>
+
+  <!-- Bootstrap 5.3 CSS desde CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons - iconos vectoriales -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Nuestros estilos personalizados (complementan Bootstrap) -->
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ============================================================
+       CONTENEDOR DEL NAVBAR
+       ============================================================
+       Este div vacío se llena dinámicamente con JavaScript.
+       La función loadNavbar() en utils.js genera el HTML del
+       navbar según si el usuario está logueado o no.
+       ============================================================ -->
+  <div id="navbar-container"></div>
+
+  <!-- ============================================================
+       HERO SECTION - BANNER PRINCIPAL (Modificado para ENSIGNA)
+       ============================================================ -->
+  <section class="hero-section text-center">
+    <div class="container">
+      <h1 style="color: #ffd700; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px;">
+        ENSIGNA
+      </h1>
+      <p style="font-size: 1.2rem; color: #aaaaaa; margin-top: 10px;">Ropa de culto a tu alcance. Descubre las últimas tendencias con envío a todo Chile.</p>
+      <a href="/pages/catalog.html" class="btn btn-hero mt-3" style="background-color: #ffd700; color: #000; font-weight: bold; border: none;">
+        Ver Catálogo
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTENIDO PRINCIPAL
+       ============================================================ -->
+  <main class="container py-4">
+
+    <!-- ============================================================
+         PRODUCTOS DESTACADOS
+         ============================================================ -->
+    <section class="mb-5">
+      <h2 class="text-center mb-4">
+        <i class="bi bi-star me-2"></i>Productos Destacados
+      </h2>
+      <div class="row" id="featured-products">
+        <!-- Los productos se cargan aquí dinámicamente con JavaScript -->
+        <div class="col-12 text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-3">
+        <a href="/pages/catalog.html" class="btn btn-outline-primary" style="color: #ffd700; border-color: #ffd700;">
+          <i class="bi bi-grid me-1"></i>Ver todo el catálogo
+        </a>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECCIÓN INFORMATIVA - POR QUÉ ELEGIRNOS
+         ============================================================ -->
+    <section class="mb-5">
+      <h2 class="text-center mb-4">¿Por qué elegirnos?</h2>
+      <div class="row text-center">
+        <!-- Ventaja 1: Envío rápido -->
+        <div class="col-md-4 mb-3">
+          <div class="card h-100 border-0 shadow-sm p-4">
+            <i class="bi bi-truck text-primary" style="font-size: 2.5rem; color: #ffd700 !important;"></i>
+            <h5 class="mt-3">Envío Rápido</h5>
+            <p class="text-muted">Despacho a todo Chile en 3-5 días hábiles. Seguimiento en tiempo real.</p>
+          </div>
+        </div>
+
+        <!-- Ventaja 2: Pago Seguro -->
+        <div class="col-md-4 mb-3">
+          <div class="card h-100 border-0 shadow-sm p-4">
+            <i class="bi bi-shield-check text-primary" style="font-size: 2.5rem; color: #ffd700 !important;"></i>
+            <h5 class="mt-3">Pago Seguro</h5>
+            <p class="text-muted">Pagos seguros con Webpay de Transbank. Tus datos siempre protegidos.</p>
+          </div>
+        </div>
+
+        <!-- Ventaja 3: Soporte -->
+        <div class="col-md-4 mb-3">
+          <div class="card h-100 border-0 shadow-sm p-4">
+            <i class="bi bi-headset text-primary" style="font-size: 2.5rem; color: #ffd700 !important;"></i>
+            <h5 class="mt-3">Soporte Dedicado</h5>
+            <p class="text-muted">Equipo de soporte listo para ayudarte. Respuestas en menos de 24 horas.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer-custom">
+    <div class="container">
+      <p class="mb-0">&copy; 2026 Ensigna  - Proyecto Educativo de Ayudantía Web</p>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/catalog.js"></script>
+  <script>
+    // Ejecutar cuando el DOM esté completamente cargado
+    document.addEventListener('DOMContentLoaded', () => {
+      // Cargar el navbar dinámico (se adapta según sesión)
+      loadNavbar();
+    });
+  </script>
+</body>
+</html>

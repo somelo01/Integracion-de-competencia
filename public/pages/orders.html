@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ============================================================
+       ORDERS.HTML - HISTORIAL DE PEDIDOS
+       ============================================================
+       Lista todos los pedidos del usuario autenticado con:
+       ID, fecha, estado (badge coloreado), total y acciones.
+       
+       Acciones disponibles:
+       - Ver detalle: navega a order-detail.html?id=X
+       - Cancelar: solo para pedidos con estado "Pendiente"
+       
+       REQUIERE AUTENTICACIÓN.
+       Endpoint: GET /api/pedidos?page=N
+       
+       Referencia: Imagen 5 - Diagrama de estados de pedidos
+       ============================================================ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Pedidos - Ensigna </title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+  <main class="container py-4">
+    <h2 class="mb-4">
+      <i class="bi bi-bag me-2"></i>Mis Pedidos
+    </h2>
+
+    <!-- Contenedor de alertas -->
+    <div id="orders-alerts"></div>
+
+    <!-- ============================================================
+         TABLA DE PEDIDOS
+         ============================================================
+         Tabla responsive con la lista de pedidos del usuario.
+         El tbody se llena con JavaScript (orders.js).
+         ============================================================ -->
+    <div id="orders-list">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Pedido</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+              <th>Total</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="orders-body">
+            <!-- Se carga dinámicamente con JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer-custom">
+    <div class="container">
+      <p class="mb-0">&copy; 2026 Ensigna  - Proyecto Educativo</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/orders.js"></script>
+</body>
+</html>

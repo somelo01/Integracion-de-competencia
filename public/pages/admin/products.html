@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ============================================================
+       ADMIN/PRODUCTS.HTML - GESTIÓN DE PRODUCTOS (CRUD)
+       ============================================================
+       Tabla CRUD completa para administrar productos:
+       - Ver todos los productos con sus datos
+       - Crear nuevos productos (modal)
+       - Editar productos existentes (modal)
+       - Eliminar productos
+       
+       REQUIERE ROL ADMIN.
+       
+       Endpoints:
+         GET    /api/admin/productos     → listar
+         POST   /api/admin/productos     → crear
+         PUT    /api/admin/productos/:id → editar
+         DELETE /api/admin/productos/:id → eliminar
+       ============================================================ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Productos - Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+  <main class="container py-4" id="admin-products">
+    <!-- Encabezado con botón de crear -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2>
+        <i class="bi bi-box-seam me-2"></i>Gestión de Productos
+      </h2>
+      <button class="btn btn-primary" onclick="openCreateProductModal()">
+        <i class="bi bi-plus-circle me-1"></i>Nuevo Producto
+      </button>
+    </div>
+
+    <!-- Breadcrumb de navegación -->
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="/pages/admin/dashboard.html">
+            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+          </a>
+        </li>
+        <li class="breadcrumb-item active">Productos</li>
+      </ol>
+    </nav>
+
+    <!-- Contenedor de alertas -->
+    <div id="products-alerts"></div>
+
+    <!-- ============================================================
+         TABLA DE PRODUCTOS
+         ============================================================
+         Tabla con datos de todos los productos del sistema.
+         Columnas: ID, Nombre/Categoría, Precio, Stock, Estado,
+         Talla y Acciones (editar, eliminar).
+         ============================================================ -->
+    <div class="table-responsive">
+      <table class="table table-hover table-admin align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Nombre / Categoría</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Estado</th>
+            <th>Talla</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="products-body">
+          <!-- Se carga dinámicamente con admin.js -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- ============================================================
+       MODAL: Crear/Editar Producto
+       ============================================================
+       Modal reutilizable para crear y editar productos.
+       Si product-id tiene valor → modo edición (PUT)
+       Si product-id está vacío → modo creación (POST)
+       
+       Los campos coinciden con los que espera el backend:
+       nombre, categoria, precio, stock, descripcion, imagen_url,
+       talla, color.
+       ============================================================ -->
+  <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="productModalLabel">
+            <i class="bi bi-box-seam me-2"></i>Crear Nuevo Producto
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Alertas dentro del modal -->
+          <div id="product-modal-alerts"></div>
+
+          <form id="product-form" novalidate>
+            <!-- ID oculto (se llena al editar, vacío al crear) -->
+            <input type="hidden" id="product-id">
+
+            <div class="row">
+              <!-- Nombre del producto -->
+              <div class="col-md-6 mb-3">
+                <label for="product-nombre" class="form-label">Nombre *</label>
+                <input type="text" class="form-control" id="product-nombre"
+                       placeholder="Nombre del producto" required minlength="3" maxlength="150">
+              </div>
+
+              <!-- Categoría -->
+              <div class="col-md-6 mb-3">
+                <label for="product-categoria" class="form-label">Categoría *</label>
+                <input type="text" class="form-control" id="product-categoria"
+                       placeholder="Ej: Camisetas, Pantalones, Zapatos" required>
+              </div>
+
+              <!-- Precio -->
+              <div class="col-md-4 mb-3">
+                <label for="product-precio" class="form-label">Precio *</label>
+                <input type="number" class="form-control" id="product-precio"
+                       placeholder="29990" min="0" step="0.01" required>
+              </div>
+
+              <!-- Stock -->
+              <div class="col-md-4 mb-3">
+                <label for="product-stock" class="form-label">Stock *</label>
+                <input type="number" class="form-control" id="product-stock"
+                       placeholder="100" min="0" step="1" required>
+              </div>
+
+              <!-- URL de imagen -->
+              <div class="col-md-4 mb-3">
+                <label for="product-imagen" class="form-label">URL de Imagen</label>
+                <input type="url" class="form-control" id="product-imagen"
+                       placeholder="https://...">
+              </div>
+
+              <!-- Talla -->
+              <div class="col-md-6 mb-3">
+                <label for="product-talla" class="form-label">Talla</label>
+                <select class="form-select" id="product-talla">
+                  <option value="">Sin talla</option>
+                  <option value="XS">XS</option>
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                  <option value="XXL">XXL</option>
+                </select>
+              </div>
+
+              <!-- Color -->
+              <div class="col-md-6 mb-3">
+                <label for="product-color" class="form-label">Color</label>
+                <input type="text" class="form-control" id="product-color"
+                       placeholder="Ej: Negro, Azul, Rojo">
+              </div>
+
+              <!-- Descripción -->
+              <div class="col-12 mb-3">
+                <label for="product-descripcion" class="form-label">Descripción</label>
+                <textarea class="form-control" id="product-descripcion" rows="3"
+                          placeholder="Descripción detallada del producto..."></textarea>
+              </div>
+            </div>
+
+            <!-- Botones del modal -->
+            <div class="d-flex justify-content-end gap-2">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle me-1"></i>Guardar Producto
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer-custom">
+    <div class="container">
+      <p class="mb-0">&copy; 2026 Ensigna - Panel de Administración</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

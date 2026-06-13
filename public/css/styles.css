@@ -1,0 +1,1006 @@
+/* Importar fuente premium Inter de Google Fonts para un aspecto moderno y limpio */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  /* ============================================================
+    ESTILOS PERSONALIZADOS - TIENDA DE ROPA E-COMMERCE
+    ============================================================
+    Este archivo complementa Bootstrap 5.3 con estilos propios.
+    Bootstrap ya provee la mayor parte del diseño (grid, botones,
+    formularios, etc.), aquí solo añadimos lo específico de
+    nuestra marca y funcionalidades.
+    
+    ESTRUCTURA:
+    1. Variables CSS (colores de marca)
+    2. Estilos globales (body, links)
+    3. Navbar personalizado
+    4. Tarjetas de producto (hover effects)
+    5. Validación de formularios (feedback visual)
+    6. Badges de estado (pedidos, tickets)
+    7. Sección Hero (landing page)
+    8. Carrito y tablas
+    9. Panel Admin
+    10. Animaciones y transiciones
+    11. Responsive (media queries)
+    ============================================================ */
+
+
+  /* ============================================================
+    1. VARIABLES CSS - COLORES DE MARCA
+    ============================================================
+    Usamos CSS Custom Properties (variables) para mantener
+    consistencia en toda la aplicación. Si el cliente quiere
+    cambiar los colores, solo se modifican aquí.
+    
+    ¿POR QUÉ variables CSS y no SASS?
+    Porque este es un proyecto educativo simple. Las variables
+    CSS funcionan directamente en el navegador sin compilación.
+    ============================================================ */
+
+:root {
+  /* Colores principales - Tema Oscuro Ensigna */
+  --color-primary: #111111;        /* Negro puro - navbar, header */
+  --color-primary-light: #2b2b2b;  /* Gris oscuro - hover de navbar */
+  --color-primary-dark: #000000;   /* Negro absoluto - footer y sombras */
+  --color-accent: #ffd700;         /* Amarillo/Dorado característico de Ensigna */
+  --color-accent-hover: #e6c200;   /* Amarillo oscuro para Hover */
+
+  /* Colores de estado - para badges de pedidos y tickets */
+  --color-success: #28a745;        /* Verde - Completado, Resuelto */
+  --color-warning: #ffc107;        /* Amarillo - Pendiente, En proceso */
+  --color-danger: #cc0000;         /* Rojo intenso - Cancelado, errores, registro */
+  --color-info: #17a2b8;           /* Cyan - Información, Enviado */
+
+  /* Colores neutros - Adaptación a MODO OSCURO */
+  --color-bg: #1a1a1a;             /* Fondo general de la página gris oscuro */
+  --color-card-bg: #222222;        /* Fondo de tarjetas gris para resaltar sobre el fondo */
+  --color-text: #ffffff;           /* Texto principal en blanco para legibilidad */
+  --color-text-muted: #aaaaaa;     /* Texto secundario en gris claro */
+  --color-border: #444444;         /* Bordes sutiles oscuros */
+
+  /* Tipografía */
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Sombras reutilizables */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.8);
+
+  /* Bordes redondeados */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+
+  /* Transiciones */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+}
+
+
+  /* ============================================================
+    2. ESTILOS GLOBALES
+    ============================================================
+    Estilos base que aplican a toda la página.
+    Sobrescriben los defaults del navegador y complementan
+    los resets de Bootstrap.
+    ============================================================ */
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  /* Mínima altura para que el footer quede abajo aunque haya poco contenido */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* El contenido principal ocupa todo el espacio disponible */
+main {
+  flex: 1;
+}
+
+/* Links personalizados con el color de la marca */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-accent);
+}
+
+
+  /* ============================================================
+    3. NAVBAR PERSONALIZADO
+    ============================================================
+    Sobrescribe los colores default de Bootstrap navbar.
+    Usamos nuestro azul marino oscuro como fondo.
+    La navbar se genera dinámicamente con JavaScript (loadNavbar)
+    pero los estilos se aplican con estas clases.
+    ============================================================ */
+.navbar-custom {
+  background-color: var(--color-primary) !important;
+  box-shadow: var(--shadow-md);
+  padding: 0.6rem 0;
+}
+
+/* Logo/marca en la navbar */
+.navbar-custom .navbar-brand {
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: 0.5px;
+}
+
+.navbar-custom .navbar-brand:hover {
+  color: var(--color-accent) !important;
+}
+
+/* Links de navegación */
+.navbar-custom .nav-link {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+  color: #ffffff !important;
+  background-color: var(--color-primary-light);
+}
+
+/* Badge del carrito (número de ítems) */
+.cart-badge {
+  position: relative;
+  top: -8px;
+  right: 5px;
+  font-size: 0.7rem;
+  padding: 0.2em 0.5em;
+  background-color: var(--color-accent) !important;
+}
+
+/* Botón de cerrar sesión en la navbar */
+.btn-logout {
+  color: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.btn-logout:hover {
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+  color: #ffffff !important;
+}
+
+
+/* ============================================================
+    4. TARJETAS DE PRODUCTO
+    ============================================================
+    Las tarjetas usan .card de Bootstrap como base.
+    Añadimos efectos hover para que se "levanten" al pasar
+    el mouse, indicando al usuario que son clickeables.
+    
+    Referencia: Imagen 3 - Diagrama de catálogo de productos
+============================================================ */
+.product-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  cursor: pointer;
+  height: 100%;
+  background-color: var(--color-card-bg);
+}
+
+/* Efecto hover sobrio y profesional */
+.product-card:hover {
+  border-color: var(--color-text-muted);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* Imagen del producto dentro de la tarjeta */
+.product-card .card-img-top {
+  height: 220px;
+  object-fit: cover;
+  border-bottom: 1px solid var(--color-border);
+  /* object-fit: cover asegura que la imagen cubra el área
+     sin deformarse, cortando los bordes si es necesario */
+}
+
+/* Nombre del producto */
+.product-card .card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  /* Limitar a 2 líneas con puntos suspensivos */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Precio del producto */
+/* Precio del producto */
+.product-card .product-price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff !important; /* Blanco para que resalte en las tarjetas grises */
+}
+
+/* Categoría del producto (badge pequeño) */
+.product-card .product-category {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Botón "Agregar al carrito" dentro de la tarjeta */
+.btn-add-cart {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #000000; /* Cambiado a negro para que resalte sobre el amarillo */
+  font-weight: bold;
+  transition: all var(--transition-fast);
+}
+
+.btn-add-cart:hover {
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  color: #ffffff;
+  transform: scale(1.02);
+}
+
+
+/* ============================================================
+  5. VALIDACIÓN DE FORMULARIOS - FEEDBACK VISUAL
+    ============================================================
+    Bootstrap ya provee .is-valid e .is-invalid para los inputs.
+    Aquí personalizamos los colores y añadimos estilos para
+    los mensajes de error/éxito debajo de cada campo.
+    
+    ¿CÓMO FUNCIONA?
+    JavaScript (auth.js, utils.js) añade/quita las clases
+    .is-valid / .is-invalid en tiempo real mientras el usuario
+    escribe. Estos estilos dan el feedback visual inmediato.
+    ============================================================ */
+
+/* Mensaje de error debajo del input */
+.validation-message {
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  display: none; /* Se muestra con JS cuando hay error */
+}
+
+/* Mostrar el mensaje cuando el input es inválido */
+.is-invalid ~ .validation-message {
+  display: block;
+  color: var(--color-danger);
+}
+
+/* Mostrar el mensaje cuando el input es válido (opcional) */
+.is-valid ~ .validation-message {
+  display: block;
+  color: var(--color-success);
+}
+
+/* Barra indicadora de fortaleza de contraseña */
+.password-strength-bar {
+  height: 5px;
+  border-radius: 3px;
+  background-color: var(--color-border);
+  margin-top: 0.5rem;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.password-strength-bar .strength-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width var(--transition-normal), background-color var(--transition-normal);
+  width: 0%;
+}
+
+/* Colores según nivel de fortaleza */
+.strength-weak .strength-fill {
+  width: 25%;
+  background-color: var(--color-danger);
+}
+
+.strength-fair .strength-fill {
+  width: 50%;
+  background-color: #fd7e14; /* Naranja */
+}
+
+.strength-good .strength-fill {
+  width: 75%;
+  background-color: var(--color-warning);
+}
+
+.strength-strong .strength-fill {
+  width: 100%;
+  background-color: var(--color-success);
+}
+
+/* Texto descriptivo de la fortaleza */
+.password-strength-text {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+
+  /* ============================================================
+    6. BADGES DE ESTADO
+    ============================================================
+    Badges coloreados para mostrar el estado de pedidos y tickets.
+    Cada estado tiene un color semántico que el usuario asocia
+    intuitivamente (verde=bueno, rojo=malo, amarillo=esperar).
+    
+    Referencia: Imagen 5 - Diagrama de estados de pedidos
+    ============================================================ */
+
+/* Pedidos */
+.badge-pendiente {
+  background-color: #fff3cd !important;
+  color: #856404 !important;
+  border: 1px solid #ffeeba !important;
+  font-weight: 600;
+  padding: 0.35em 0.65em;
+}
+
+.badge-pagado {
+  background-color: #d1ecf1 !important;
+  color: #0c5460 !important;
+  border: 1px solid #bee5eb !important;
+  font-weight: 600;
+  padding: 0.35em 0.65em;
+}
+
+.badge-enviado {
+  background-color: #e2d9f3 !important;
+  color: #512da8 !important;
+  border: 1px solid #d1c4e9 !important;
+  font-weight: 600;
+  padding: 0.35em 0.65em;
+}
+
+.badge-entregado {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+  border: 1px solid #c3e6cb !important;
+  font-weight: 600;
+  padding: 0.35em 0.65em;
+}
+
+.badge-cancelado {
+  background-color: #f8d7da !important;
+  color: #721c24 !important;
+  border: 1px solid #f5c6cb !important;
+  font-weight: 600;
+  padding: 0.35em 0.65em;
+}
+
+/* Tickets de soporte */
+.badge-abierto {
+  background-color: #cce5ff !important;
+  color: #004085 !important;
+  border: 1px solid #b8daff !important;
+  font-weight: 600;
+  padding: 0.35em 0.65em;
+}
+
+.badge-en-proceso {
+  background-color: #fff3cd !important;
+  color: #856404 !important;
+  border: 1px solid #ffeeba !important;
+  font-weight: 600;
+  padding: 0.35em 0.65em;
+}
+
+.badge-resuelto {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+  border: 1px solid #c3e6cb !important;
+  font-weight: 600;
+  padding: 0.35em 0.65em;
+}
+
+.badge-cerrado {
+  background-color: #e2e3e5 !important;
+  color: #383d41 !important;
+  border: 1px solid #d6d8db !important;
+  font-weight: 600;
+  padding: 0.35em 0.65em;
+}
+
+
+  /* ============================================================
+    7. SECCIÓN HERO - LANDING PAGE
+    ============================================================
+    Banner principal de la página de inicio (index.html).
+    Imagen de fondo con texto superpuesto y botón CTA.
+    ============================================================ */
+.hero-section {
+  background-color: #0f172a; /* Slate 900 - Fondo oscuro profundo y sobrio */
+  color: #ffffff;
+  padding: 6rem 0;
+  text-align: center;
+  border-radius: 0;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.5px;
+}
+
+.hero-section p {
+  font-size: 1.15rem;
+  opacity: 0.85;
+  max-width: 600px;
+  margin: 0 auto 2.25rem;
+  font-weight: 300;
+}
+
+/* Botón principal del hero - Sobrio y elegante */
+.btn-hero {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.75rem 2.25rem;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-normal);
+}
+
+.btn-hero:hover {
+  background-color: #f1f5f9;
+  border-color: #f1f5f9;
+  color: #0f172a;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+
+  /* ============================================================
+    8. CARRITO Y TABLAS
+    ============================================================
+    Estilos para la tabla del carrito y las tablas de pedidos.
+    Bootstrap ya da estilos base con .table, aquí personalizamos.
+    ============================================================ */
+
+/* Imagen miniatura en la tabla del carrito */
+.cart-item-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+/* Input de cantidad en el carrito */
+.cart-quantity-input {
+  width: 70px;
+  text-align: center;
+}
+
+/* Fila del carrito con transición para eliminar */
+.cart-item-row {
+  transition: opacity var(--transition-normal), transform var(--transition-normal);
+}
+
+.cart-item-row.removing {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+/* Total del carrito */
+.cart-total {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* Carrito vacío */
+.empty-cart {
+  text-align: center;
+  padding: 3rem 0;
+  color: var(--color-text-muted);
+}
+
+.empty-cart i {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+
+  /* ============================================================
+    9. PANEL DE ADMINISTRACIÓN
+    ============================================================
+    Estilos específicos para las páginas del panel admin.
+    Tarjetas de estadísticas con iconos grandes y colores.
+    ============================================================ */
+
+  /* Tarjeta de estadística en el dashboard - Rediseño Profesional */
+.stat-card {
+  background-color: var(--color-card-bg) !important;
+  color: var(--color-text) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  overflow: hidden;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Bordes laterales sutiles y colores de iconos por tipo de estado */
+.stat-card.bg-primary {
+  border-left: 4px solid var(--color-primary) !important;
+}
+.stat-card.bg-primary .stat-icon {
+  color: var(--color-primary) !important;
+}
+
+.stat-card.bg-success {
+  border-left: 4px solid var(--color-success) !important;
+}
+.stat-card.bg-success .stat-icon {
+  color: var(--color-success) !important;
+}
+
+.stat-card.bg-info {
+  border-left: 4px solid #0d6efd !important; /* Azul más serio que el cyan brillante */
+}
+.stat-card.bg-info .stat-icon {
+  color: #0d6efd !important;
+}
+
+.stat-card.bg-secondary {
+  border-left: 4px solid #6c757d !important;
+}
+.stat-card.bg-secondary .stat-icon {
+  color: #6c757d !important;
+}
+
+.stat-card.bg-warning {
+  border-left: 4px solid #fd7e14 !important; /* Naranja en vez de amarillo chillón para seriedad */
+}
+.stat-card.bg-warning .stat-icon {
+  color: #fd7e14 !important;
+}
+.stat-card.bg-warning .stat-number, 
+.stat-card.bg-warning .stat-label {
+  color: var(--color-text) !important;
+}
+
+.stat-card.bg-danger {
+  border-left: 4px solid var(--color-danger) !important;
+}
+.stat-card.bg-danger .stat-icon {
+  color: var(--color-danger) !important;
+}
+
+/* Contenido dentro de las tarjetas de estadística */
+.stat-card .stat-number {
+  color: var(--color-text) !important;
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.stat-card .stat-label {
+  color: var(--color-text-muted) !important;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+}
+
+.stat-card .stat-icon {
+  font-size: 2.2rem;
+  opacity: 0.9;
+}
+
+/* Tabla de admin - cabecera más elegante y sutil (reemplaza el table-dark rústico) */
+.table-admin thead, .table-admin thead tr, .table-admin thead th {
+  background-color: #f8f9fa !important;
+  color: var(--color-text-muted) !important;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  padding: 0.85rem 1rem !important;
+  border-bottom: 2px solid var(--color-border) !important;
+}
+
+.table-admin tbody td {
+  padding: 0.85rem 1rem !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+.table-admin tbody tr {
+  transition: background-color var(--transition-fast);
+}
+
+.table-admin tbody tr:hover {
+  background-color: rgba(27, 42, 74, 0.02) !important;
+}
+
+/* Rediseño de cabecera de Modales en Admin */
+.modal-header.bg-primary {
+  background-color: var(--color-card-bg) !important;
+  color: var(--color-text) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+.modal-header.bg-primary .modal-title {
+  color: var(--color-primary) !important;
+  font-weight: 600;
+}
+
+.modal-header.bg-primary .btn-close {
+  filter: invert(0) !important; /* Hace que la cruz sea oscura y visible */
+}
+
+/* Breadcrumb elegante */
+.breadcrumb-item a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.breadcrumb-item a:hover {
+  color: var(--color-primary);
+}
+
+.breadcrumb-item.active {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+
+  /* ============================================================
+    10. ANIMACIONES Y TRANSICIONES
+    ============================================================
+    Animaciones sutiles para mejorar la experiencia del usuario.
+    No se abusa de ellas para mantener la página liviana.
+    ============================================================ */
+
+/* Animación de entrada - fade in con slide up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Clase para aplicar la animación de entrada */
+.animate-in {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* Spinner de carga centrado */
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 0;
+}
+
+/* Efecto de carga skeleton (placeholder mientras carga) */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-border) 25%,
+    #e8ecef 50%,
+    var(--color-border) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Botón con estado de carga */
+.btn-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-top: -8px;
+  margin-left: -8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+  /* ============================================================
+    11. RESPONSIVE - MEDIA QUERIES
+    ============================================================
+    Ajustes para pantallas pequeñas (móviles y tablets).
+    Bootstrap ya maneja la mayoría del responsive con su grid,
+    aquí solo ajustamos detalles específicos de nuestros estilos.
+    ============================================================ */
+
+/* Tablets y móviles grandes (< 768px) */
+@media (max-width: 767.98px) {
+  .hero-section {
+    padding: 3rem 1rem;
+  }
+
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+
+  .hero-section p {
+    font-size: 1rem;
+  }
+
+  .product-card .card-img-top {
+    height: 180px;
+  }
+
+  .stat-card .stat-number {
+    font-size: 1.5rem;
+  }
+
+  /* En móvil, la tabla del carrito se hace scroll horizontal */
+  .table-responsive-cart {
+    overflow-x: auto;
+  }
+}
+
+/* Móviles pequeños (< 576px) */
+@media (max-width: 575.98px) {
+  .hero-section h1 {
+    font-size: 1.6rem;
+  }
+
+  .cart-item-img {
+    width: 45px;
+    height: 45px;
+  }
+
+  /* Ocultar columnas menos importantes en móvil */
+  .hide-mobile {
+    display: none;
+  }
+}
+
+
+  /* ============================================================
+    12. UTILIDADES ADICIONALES
+    ============================================================
+    Clases utilitarias que no provee Bootstrap y necesitamos.
+    ============================================================ */
+
+/* Cursor pointer para elementos clickeables */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Separador visual */
+.divider {
+  border-top: 1px solid var(--color-border);
+  margin: 1.5rem 0;
+}
+
+/* Contenedor de alertas (donde se inyectan las alertas con JS) */
+.alert-container {
+  min-height: 0;
+  transition: min-height var(--transition-normal);
+}
+
+/* Tarjeta de formulario (login, registro, etc.) */
+.form-card {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 2.5rem;
+  max-width: 480px;
+  margin: 3rem auto;
+}
+
+.form-card h2 {
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Página no encontrada */
+.not-found {
+  text-align: center;
+  padding: 5rem 0;
+}
+
+.not-found h1 {
+  font-size: 5rem;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* Filtro lateral del catálogo */
+.filter-sidebar {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 1.5rem;
+  box-shadow: none;
+  position: sticky;
+  top: 80px; /* Debajo del navbar fijo */
+}
+
+.filter-sidebar h5 {
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-primary);
+}
+
+/* Footer simple */
+.footer-custom {
+  background-color: var(--color-primary-dark);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 1.5rem 0;
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: auto;
+}
+/* ============================================================
+   ESTILOS MODO CLARO (SOLO PARA LA PÁGINA DE CATÁLOGO)
+   ============================================================ */
+.modo-claro {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* Modificar las tarjetas en el modo claro */
+.modo-claro .product-card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+}
+
+.modo-claro .product-card .card-title {
+    color: #000000;
+}
+
+/* El precio en el catálogo debe ser negro para verse en el fondo blanco */
+.modo-claro .product-card .product-price {
+    color: #000000 !important;
+}
+
+/* Modificar la barra lateral de filtros en el catálogo */
+.modo-claro .filter-sidebar {
+    background-color: #f8f9fa;
+    border: 1px solid #e2e8f0;
+    color: #000000;
+}
+
+.modo-claro .filter-sidebar h5,
+.modo-claro .filter-sidebar label {
+    color: #000000;
+}
+
+/* Títulos principales */
+.modo-claro h2, 
+.modo-claro h3 {
+    color: #000000 !important;
+}
+/* ============================================================
+   ESTILOS PARA FORMULARIOS DE LOGIN Y REGISTRO (ENSIGNA)
+   ============================================================ */
+
+/* Títulos del formulario ("Crear Cuenta", "Iniciar Sesión") */
+.form-card h2, 
+.form-card h3,
+.form-card .card-title {
+    color: #ffffff !important; /* Forzar a blanco para que resalte */
+    font-weight: 700;
+}
+
+/* Etiquetas (Labels) de los inputs y los íconos */
+.form-card label,
+.form-card .bi {
+    color: #ffffff !important; 
+}
+
+/* Botón principal (reemplaza el azul por defecto de Bootstrap) */
+.form-card .btn-primary,
+.form-card button[type="submit"] {
+    background-color: var(--color-accent) !important; /* Amarillo Ensigna */
+    border-color: var(--color-accent) !important;
+    color: #000000 !important; /* Texto negro para contrastar */
+    font-weight: bold;
+    padding: 10px 20px;
+    transition: all var(--transition-fast);
+}
+
+.form-card .btn-primary:hover,
+.form-card button[type="submit"]:hover {
+    background-color: var(--color-accent-hover) !important;
+    border-color: var(--color-accent-hover) !important;
+    transform: translateY(-2px);
+}
+
+/* Texto de "¿Ya tienes cuenta?" (Gris claro para leerse bien) */
+.form-card p,
+.form-card span,
+.form-card .text-muted {
+    color: #aaaaaa !important; 
+}
+
+/* Enlace "Inicia sesión aquí" o "Regístrate aquí" */
+.form-card a {
+    color: var(--color-accent) !important; /* Amarillo Ensigna */
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.form-card a:hover {
+    color: #ffffff !important; /* Cambia a blanco al pasar el mouse */
+    text-decoration: underline;
+}
+
+/* Fondo de los inputs para que no desentonen */
+.form-card input.form-control {
+    background-color: #333333;
+    border: 1px solid #555555;
+    color: #ffffff;
+}
+
+.form-card input.form-control:focus {
+    background-color: #444444;
+    border-color: var(--color-accent);
+    color: #ffffff;
+    box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.25); /* Sombra amarilla al hacer clic */
+}
+
+/* Color del texto de ayuda dentro del input (placeholder) */
+.form-card input.form-control::placeholder {
+    color: #888888;
+}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ============================================================
+       CART.HTML - CARRITO DE COMPRAS
+       ============================================================
+       Muestra los productos que el usuario ha agregado al carrito.
+       Permite: modificar cantidades, eliminar ítems, vaciar el
+       carrito y proceder al checkout.
+       
+       REQUIERE AUTENTICACIÓN (redirige al login si no hay sesión).
+       
+       Endpoints:
+         GET    /api/carrito                  → obtener ítems
+         PUT    /api/carrito/actualizar/:id   → cambiar cantidad
+         DELETE /api/carrito/eliminar/:id     → eliminar un ítem
+         DELETE /api/carrito/vaciar           → vaciar todo
+       
+       Referencia: Imagen 4 - Diagrama del flujo de compra
+       ============================================================ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito de Compras - Ensigna</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+  <main class="container py-4">
+    <h2 class="mb-4">
+      <i class="bi bi-cart3 me-2"></i>Carrito de Compras
+    </h2>
+
+    <!-- Contenedor de alertas -->
+    <div id="cart-alerts"></div>
+
+    <!-- ============================================================
+         TABLA DEL CARRITO
+         ============================================================
+         Tabla responsive con columnas: imagen, producto, precio
+         unitario, cantidad (editable), subtotal y acciones.
+         
+         El tbody#cart-body se llena con JavaScript (cart.js).
+         ============================================================ -->
+    <div class="table-responsive" id="cart-table-container">
+      <table class="table table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th style="width: 70px;">Imagen</th>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th style="width: 100px;">Cantidad</th>
+            <th>Subtotal</th>
+            <th style="width: 60px;">Acción</th>
+          </tr>
+        </thead>
+        <tbody id="cart-body">
+          <!-- Se carga dinámicamente con JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ============================================================
+         MENSAJE DE CARRITO VACÍO
+         ============================================================
+         Se muestra cuando no hay ítems. Se oculta cuando hay productos.
+         ============================================================ -->
+    <div id="empty-cart" style="display: none;"></div>
+
+    <!-- ============================================================
+         RESUMEN Y BOTONES DE ACCIÓN
+         ============================================================
+         Muestra el total y los botones para vaciar el carrito o
+         proceder al checkout.
+         ============================================================ -->
+    <div id="cart-summary" class="mt-4">
+      <div class="row">
+        <div class="col-md-6">
+          <!-- Botón: Vaciar carrito (abre modal de confirmación) -->
+          <button class="btn btn-outline-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#emptyCartModal">
+            <i class="bi bi-trash me-1"></i>Vaciar carrito
+          </button>
+        </div>
+        <div class="col-md-6 text-end">
+          <!-- Total del carrito -->
+          <p class="mb-2">
+            <strong>Total:</strong>
+            <span class="cart-total" id="cart-total">$0</span>
+          </p>
+          <!-- Botón: Proceder al pago -->
+          <a href="/pages/checkout.html" class="btn btn-primary btn-lg">
+            <i class="bi bi-credit-card me-1"></i>Proceder al Pago
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ============================================================
+       MODAL: Confirmar vaciar carrito
+       ============================================================
+       Modal de Bootstrap para confirmar antes de eliminar todos
+       los ítems del carrito. Previene eliminaciones accidentales.
+       
+       ¿POR QUÉ un modal y no un simple confirm()?
+       Porque el modal se puede personalizar visualmente y es más
+       profesional. Aunque confirm() funciona, los modals dan mejor UX.
+       ============================================================ -->
+  <div class="modal fade" id="emptyCartModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title">
+            <i class="bi bi-exclamation-triangle me-2"></i>Vaciar carrito
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Estás seguro de vaciar todo el carrito? Se eliminarán todos los productos.</p>
+          <p class="text-muted mb-0">Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-danger" id="btn-confirm-empty">
+            <i class="bi bi-trash me-1"></i>Sí, vaciar carrito
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer-custom">
+    <div class="container">
+      <p class="mb-0">&copy; 2026 Ensigna - Proyecto Educativo</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/cart.js"></script>
+</body>
+</html>

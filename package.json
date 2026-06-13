@@ -1,0 +1,33 @@
+{
+  "name": "tienda-ropa-ecommerce",
+  "version": "1.0.0",
+  "description": "Sistema E-Commerce de venta de ropa con Node.js, Express, MySQL y Webpay Plus",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [
+    "ecommerce",
+    "ropa",
+    "nodejs",
+    "express",
+    "mysql",
+    "webpay"
+  ],
+  "author": "Equipo Ayudantía",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0",
+    "express": "^4.21.0",
+    "express-mysql-session": "^3.0.3",
+    "express-session": "^1.18.0",
+    "mysql2": "^3.11.0",
+    "transbank-sdk": "^6.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

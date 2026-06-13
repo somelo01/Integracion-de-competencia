@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- ============================================================
+       LOGIN.HTML - PÁGINA DE INICIO DE SESIÓN
+       ============================================================
+       Formulario de login con email y contraseña.
+       Incluye validación en tiempo real del email.
+       Al loguearse, redirige al catálogo.
+       
+       Endpoint: POST /api/auth/login
+       Body: { email, contrasena }
+       
+       Referencia: Imagen 2 - Flujo de autenticación
+       ============================================================ -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión - Ensigna </title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+  <div id="navbar-container"></div>
+
+  <main class="container py-4">
+    <!-- ============================================================
+         FORMULARIO DE LOGIN
+         ============================================================
+         Usamos la clase .form-card (definida en styles.css) para
+         centrar y estilizar el formulario como una tarjeta.
+         
+         Cada campo tiene:
+         - Label accesible (asociado con for/id)
+         - Input con placeholder descriptivo
+         - Div .validation-message para mensajes de error en tiempo real
+         ============================================================ -->
+    <div class="form-card">
+      <h2><i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión</h2>
+
+      <!-- Contenedor para alertas dinámicas (errores, éxito) -->
+      <div id="login-alerts"></div>
+
+      <!-- Formulario - el envío se maneja con JavaScript (auth.js) -->
+      <form id="login-form" novalidate>
+        <!-- novalidate: desactiva la validación nativa del navegador
+             porque usamos nuestra propia validación con JavaScript -->
+
+        <!-- Campo: Email -->
+        <div class="mb-3">
+          <label for="login-email" class="form-label">
+            <i class="bi bi-envelope me-1"></i>Correo electrónico
+          </label>
+          <input type="email"
+                 class="form-control"
+                 id="login-email"
+                 placeholder="tu@correo.com"
+                 required
+                 autocomplete="email">
+          <!-- Mensaje de validación (se muestra/oculta con JS) -->
+          <div class="validation-message"></div>
+        </div>
+
+        <!-- Campo: Contraseña -->
+        <div class="mb-3">
+          <label for="login-password" class="form-label">
+            <i class="bi bi-lock me-1"></i>Contraseña
+          </label>
+          <input type="password"
+                 class="form-control"
+                 id="login-password"
+                 placeholder="Tu contraseña"
+                 required
+                 autocomplete="current-password">
+          <div class="validation-message"></div>
+        </div>
+
+        <!-- Botón de envío -->
+        <button type="submit" class="btn btn-primary w-100 mb-3">
+          <i class="bi bi-box-arrow-in-right me-1"></i>Iniciar Sesión
+        </button>
+
+        <!-- Links secundarios -->
+        <div class="text-center">
+          <p class="mb-1">
+            <a href="/pages/recover.html">¿Olvidaste tu contraseña?</a>
+          </p>
+          <p>
+            ¿No tienes cuenta?
+            <a href="/pages/register.html" class="fw-bold">Regístrate aquí</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer-custom">
+    <div class="container">
+      <p class="mb-0">&copy; 2026 Ensigna - Proyecto Educativo</p>
+    </div>
+  </footer>
+
+  <!-- Scripts: Bootstrap + utils + auth -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      loadNavbar();
+    });
+  </script>
+</body>
+</html>
