@@ -1,26 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       ADMIN/ORDERS.HTML - GESTIÓN DE PEDIDOS
-       ============================================================
-       Tabla de todos los pedidos del sistema con:
-       - Filtro por estado (dropdown)
-       - Dropdown para cambiar estado de cada pedido
-       - Link para ver detalle
-       
-       ESTADOS POSIBLES:
-       Pendiente → Pagado → Enviado → Entregado
-                 → Cancelado (en cualquier punto)
-       
-       REQUIERE ROL ADMIN.
-       
-       Endpoints:
-         GET /api/admin/pedidos           → listar todos
-         PUT /api/admin/pedidos/:id       → cambiar estado
-       
-       Referencia: Imagen 5 - Diagrama de estados de pedidos
-       ============================================================ -->
+  <!-- Página admin de pedidos con filtro de estado y detalles. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Pedidos - Admin</title>
@@ -52,12 +33,7 @@
     <!-- Contenedor de alertas -->
     <div id="admin-orders-alerts"></div>
 
-    <!-- ============================================================
-         FILTRO POR ESTADO
-         ============================================================
-         Permite al admin filtrar la tabla por estado del pedido.
-         Al cambiar el select, se recargan solo los pedidos de ese estado.
-         ============================================================ -->
+    <!-- Filtro por estado para los pedidos admin -->
     <div class="row mb-3">
       <div class="col-md-4">
         <label for="order-status-filter" class="form-label fw-bold">
@@ -74,9 +50,7 @@
       </div>
     </div>
 
-    <!-- ============================================================
-         TABLA DE PEDIDOS
-         ============================================================ -->
+    <!-- Tabla de pedidos administrada por admin.js -->
     <div class="table-responsive">
       <table class="table table-hover table-admin align-middle">
         <thead class="table-dark">

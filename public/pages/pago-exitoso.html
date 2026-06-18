@@ -10,24 +10,7 @@
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-  <!-- ============================================================
-       PÁGINA: PAGO EXITOSO
-       ============================================================
-       Esta página se muestra después de que Webpay Plus aprueba
-       un pago. El paymentController.js redirige aquí con:
-         res.redirect('/pago-exitoso?pedido=ID')
-       
-       Corresponde al flujo "Pago aprobado" del Diagrama de
-       Secuencia del Proceso de Compra (imagen 5):
-         "Confirmación + comprobante" → Se muestra esta página
-       
-       FLUJO:
-         1. paymentController.confirmarPago() recibe callback de Webpay
-         2. Verifica que response_code === 0 (aprobado)
-         3. Actualiza pago y pedido en BD
-         4. Crea factura
-         5. Redirige aquí con el ID del pedido como query param
-       ============================================================ -->
+  <!-- Página de pago exitoso que muestra el pedido confirmado. -->
 
   <!-- Navbar -->
   <div id="navbar-container"></div>
@@ -81,15 +64,10 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/js/utils.js"></script>
   <script>
-    // ============================================================
-    // LÓGICA DE LA PÁGINA DE PAGO EXITOSO
-    // ============================================================
+    // Página de pago exitoso: carga navbar y muestra el ID del pedido
     document.addEventListener('DOMContentLoaded', () => {
-      // Cargar el navbar
       loadNavbar();
 
-      // Obtener el ID del pedido del query param
-      // paymentController.js redirige con: /pago-exitoso?pedido=ID
       const idPedido = getQueryParam('pedido');
 
       if (idPedido) {

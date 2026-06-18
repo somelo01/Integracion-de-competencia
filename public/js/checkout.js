@@ -1,27 +1,7 @@
-// ============================================================
-// CHECKOUT.JS - LÓGICA DE CONFIRMACIÓN Y PAGO
-// ============================================================
-// Maneja la página checkout.html: muestra un resumen del pedido
-// y procesa el pago a través de Webpay (Transbank).
-//
-// FLUJO DE PAGO:
-// 1. El usuario llega desde el carrito con sus productos
-// 2. Se muestra un resumen (productos, cantidades, total)
-// 3. El usuario hace click en "Confirmar y Pagar"
-// 4. Se crea el pedido: POST /api/pedidos/crear
-// 5. Se inicia la transacción de pago: POST /api/pagos/crear
-// 6. Se redirige al usuario a la URL de Webpay para pagar
-// 7. Webpay redirige de vuelta a nuestra app (GET /api/pagos/confirmar)
-//
-// DEPENDE DE: utils.js (apiRequest, showAlert, formatCurrency, etc.)
-//
-// Referencia: Imagen 6 - Diagrama de flujo de pago con Webpay
-// ============================================================
+// checkout.js - resumen de pedido y pago con Webpay.
 
 
-// ============================================================
-// INICIALIZACIÓN AL CARGAR LA PÁGINA
-// ============================================================
+// Inicia checkout y configura el botón de pago.
 document.addEventListener('DOMContentLoaded', async () => {
   // Verificar autenticación
   const user = await redirectIfNotAuth();
@@ -41,15 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
-// ============================================================
-// FUNCIÓN: loadCheckoutSummary() - CARGAR RESUMEN DE COMPRA
-// ============================================================
-// Obtiene los ítems del carrito y los muestra como resumen
-// de la compra en formato de lista. No es editable (para
-// editar, el usuario debe volver al carrito).
-//
-// Endpoint: GET /api/carrito
-// ============================================================
+// Carga el resumen de compra desde el carrito.
 async function loadCheckoutSummary() {
   const summaryBody = document.getElementById('checkout-items');
   const totalElement = document.getElementById('checkout-total');
@@ -131,37 +103,13 @@ async function loadCheckoutSummary() {
 }
 
 
-// ============================================================
-// FUNCIÓN: processPayment() - PROCESAR PAGO
-// ============================================================
-// Ejecuta el flujo completo de pago:
-// 1. Crear el pedido desde el carrito
-// 2. Crear la transacción de pago (Webpay)
-// 3. Redirigir a Webpay para que el usuario pague
-//
-// Endpoints:
-//   POST /api/pedidos/crear → crea el pedido, retorna { id_pedido, ... }
-//   POST /api/pagos/crear → inicia Webpay, retorna { url, token }
-//
-// ¿POR QUÉ DOS PETICIONES?
-// Porque son operaciones separadas:
-// 1. Crear el pedido registra la intención de compra en nuestra BD
-// 2. Crear el pago comunica con Transbank para obtener la URL de pago
-// Si la primera falla (ej: stock insuficiente), no queremos
-// iniciar una transacción de pago innecesaria.
-// ============================================================
+// Procesa el pago: crea pedido y transacción, luego redirige a Webpay.
 async function processPayment() {
   const payBtn = document.getElementById('btn-pay');
   setButtonLoading(payBtn, 'Procesando pago...');
 
   try {
-    // ---------------------------------------------------------
-    // PASO 1: Crear el pedido
-    // ---------------------------------------------------------
-    // El backend toma los ítems del carrito del usuario,
-    // los convierte en un pedido con estado "Pendiente" y
-    // vacía el carrito.
-    // ---------------------------------------------------------
+    // Crear el pedido en el backend y vaciar el carrito.
     const orderResponse = await apiRequest('/api/pedidos/crear', 'POST');
 
     if (!orderResponse.success) {
@@ -174,13 +122,7 @@ async function processPayment() {
     const pedido = orderResponse.data;
     const idPedido = pedido.id_pedido || pedido.id;
 
-    // ---------------------------------------------------------
-    // PASO 2: Crear la transacción de pago con Webpay
-    // ---------------------------------------------------------
-    // El backend comunica con la API de Transbank para crear
-    // una transacción. Nos devuelve una URL y un token.
-    // La URL es donde debemos enviar al usuario para que pague.
-    // ---------------------------------------------------------
+    // Crear la transacción de pago y obtener la URL de Webpay.
     const payResponse = await apiRequest('/api/pagos/crear', 'POST', {
       id_pedido: idPedido
     });
@@ -193,15 +135,7 @@ async function processPayment() {
       return;
     }
 
-    // ---------------------------------------------------------
-    // PASO 3: Redirigir a Webpay
-    // ---------------------------------------------------------
-    // Webpay espera que redirijamos al usuario a su URL con
-    // el token como parámetro. El usuario ingresa sus datos
-    // de pago en la página de Webpay (no en la nuestra).
-    // Después de pagar, Webpay redirige de vuelta a nuestra app
-    // a la URL de confirmación.
-    // ---------------------------------------------------------
+    // Redirigir al usuario a Webpay con el token recibido.
     const payData = payResponse.data;
 
     if (payData.url && payData.token) {

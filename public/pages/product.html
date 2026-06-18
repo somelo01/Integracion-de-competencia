@@ -1,18 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       PRODUCT.HTML - DETALLE DE PRODUCTO
-       ============================================================
-       Muestra la información completa de un producto individual.
-       Lee el ID del producto desde la URL: ?id=42
-       
-       Incluye: imagen grande, nombre, precio, descripción,
-       talla, color, stock disponible, selector de cantidad
-       y botón "Agregar al carrito".
-       
-       Endpoint: GET /api/productos/:id
-       ============================================================ -->
+  <!-- Página de detalle de producto. Carga el producto según ?id. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalle de Producto - Ensigna </title>
@@ -25,13 +14,7 @@
   <div id="navbar-container"></div>
 
   <main class="container py-4">
-    <!-- ============================================================
-         DETALLE DEL PRODUCTO
-         ============================================================
-         Este div se llena completamente con JavaScript (catalog.js).
-         La función initProductDetail() lee el ?id= de la URL,
-         hace GET /api/productos/:id y renderiza todo el contenido.
-         ============================================================ -->
+    <!-- Contenedor de detalle de producto cargado por JS -->
     <div id="product-detail">
       <!-- Se carga dinámicamente con JavaScript -->
       <div class="text-center py-5">

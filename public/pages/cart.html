@@ -1,23 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       CART.HTML - CARRITO DE COMPRAS
-       ============================================================
-       Muestra los productos que el usuario ha agregado al carrito.
-       Permite: modificar cantidades, eliminar ítems, vaciar el
-       carrito y proceder al checkout.
-       
-       REQUIERE AUTENTICACIÓN (redirige al login si no hay sesión).
-       
-       Endpoints:
-         GET    /api/carrito                  → obtener ítems
-         PUT    /api/carrito/actualizar/:id   → cambiar cantidad
-         DELETE /api/carrito/eliminar/:id     → eliminar un ítem
-         DELETE /api/carrito/vaciar           → vaciar todo
-       
-       Referencia: Imagen 4 - Diagrama del flujo de compra
-       ============================================================ -->
+  <!-- Página de carrito: ítems, cantidades, vaciar y checkout. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carrito de Compras - Ensigna</title>
@@ -37,14 +21,7 @@
     <!-- Contenedor de alertas -->
     <div id="cart-alerts"></div>
 
-    <!-- ============================================================
-         TABLA DEL CARRITO
-         ============================================================
-         Tabla responsive con columnas: imagen, producto, precio
-         unitario, cantidad (editable), subtotal y acciones.
-         
-         El tbody#cart-body se llena con JavaScript (cart.js).
-         ============================================================ -->
+    <!-- Tabla del carrito llenada por JS -->
     <div class="table-responsive" id="cart-table-container">
       <table class="table table-hover align-middle">
         <thead class="table-dark">
@@ -63,19 +40,10 @@
       </table>
     </div>
 
-    <!-- ============================================================
-         MENSAJE DE CARRITO VACÍO
-         ============================================================
-         Se muestra cuando no hay ítems. Se oculta cuando hay productos.
-         ============================================================ -->
+    <!-- Mensaje que muestra el carrito vacío -->
     <div id="empty-cart" style="display: none;"></div>
 
-    <!-- ============================================================
-         RESUMEN Y BOTONES DE ACCIÓN
-         ============================================================
-         Muestra el total y los botones para vaciar el carrito o
-         proceder al checkout.
-         ============================================================ -->
+    <!-- Resumen del carrito y acciones -->
     <div id="cart-summary" class="mt-4">
       <div class="row">
         <div class="col-md-6">
@@ -101,16 +69,7 @@
     </div>
   </main>
 
-  <!-- ============================================================
-       MODAL: Confirmar vaciar carrito
-       ============================================================
-       Modal de Bootstrap para confirmar antes de eliminar todos
-       los ítems del carrito. Previene eliminaciones accidentales.
-       
-       ¿POR QUÉ un modal y no un simple confirm()?
-       Porque el modal se puede personalizar visualmente y es más
-       profesional. Aunque confirm() funciona, los modals dan mejor UX.
-       ============================================================ -->
+  <!-- Modal de confirmación para vaciar el carrito -->
   <div class="modal fade" id="emptyCartModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">

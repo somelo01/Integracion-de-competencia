@@ -1,0 +1,1 @@
+Planning comment simplification for public/pages HTML files

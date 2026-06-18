@@ -1,25 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       ADMIN/DASHBOARD.HTML - PANEL DE ADMINISTRACIÓN
-       ============================================================
-       Página principal del panel admin. Muestra tarjetas con
-       estadísticas generales del sistema:
-       - Total de productos
-       - Total de pedidos
-       - Total de tickets de soporte
-       - Total de usuarios
-       - Pedidos pendientes (requieren atención)
-       - Tickets abiertos (requieren respuesta)
-       
-       También incluye botones de acceso rápido a cada sección.
-       
-       REQUIERE ROL ADMIN (redirige si no es admin).
-       Endpoint: GET /api/admin/dashboard
-       
-       Referencia: Imagen 8 - Diagrama del panel de administración
-       ============================================================ -->
+  <!-- Panel admin con estadísticas generales del sistema. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel Admin - Ensigna </title>
@@ -39,15 +21,7 @@
     <!-- Contenedor de alertas -->
     <div id="dashboard-alerts"></div>
 
-    <!-- ============================================================
-         TARJETAS DE ESTADÍSTICAS
-         ============================================================
-         Cada tarjeta muestra una estadística general del sistema.
-         Los valores se actualizan con JavaScript (admin.js).
-         
-         Usamos col-md-4 para 3 tarjetas por fila en desktop,
-         y col-6 para 2 por fila en tablet.
-         ============================================================ -->
+    <!-- Tarjetas de estadísticas actualizadas por admin.js -->
     <div class="row mb-4">
       <!-- Tarjeta: Total de Productos -->
       <div class="col-md-4 col-6 mb-3">
@@ -128,11 +102,7 @@
       </div>
     </div>
 
-    <!-- ============================================================
-         ACCESOS RÁPIDOS
-         ============================================================
-         Botones grandes para navegar a cada sección del admin.
-         ============================================================ -->
+    <!-- Accesos rápidos a secciones admin -->
     <h4 class="mb-3">
       <i class="bi bi-lightning me-2"></i>Accesos Rápidos
     </h4>

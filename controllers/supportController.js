@@ -1,26 +1,11 @@
-// CONTROLADOR: SOPORTE
-// Maneja el sistema de tickets de soporte/ayuda para consultas, problemas técnicos y reembolsos.
-
-// RELACIÓN CON DIAGRAMAS DEL PROYECTO:
-// Casos de Uso: "Solicitar Soporte", "Ver Tickets", "Solicitar Reembolso"
-// ERD: Tabla "soporte" con relaciones a "usuarios" y "pedidos"
-// Diagrama de Clases: Clase "Soporte"
-// Diagrama de Secuencia: Flujo de devolución/reembolso comienza con ticket asociado a un pedido
-
-// TIPOS Y ESTADOS:
-// Tipos: 'Consulta', 'Reembolso' (requiere id_pedido), 'Problema Técnico', 'Otro'
-// Estados: 'Abierto', 'En Proceso', 'Cerrado'
+// Controlador soporte: maneja tickets de ayuda y solicitudes de reembolso.
+// Tipos de ticket: Consulta, Reembolso, Problema Técnico, Otro.
 
 const { pool } = require('../config/db');
 
 
 // CREAR TICKET DE SOPORTE
 // Crea un nuevo ticket de soporte para el usuario autenticado
-// FLUJO:
-// validateTicket ya validó asunto, tipo y comentarios
-// Si el tipo es 'Reembolso', verificar que el pedido exista y pertenezca al usuario
-// Verificar que el estado del pedido permita reembolso (Aprobado o Entregado)
-// Insertar el ticket en la tabla 'soporte'
 const crearTicket = async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -184,7 +169,7 @@ const obtenerTicket = async (req, res) => {
   }
 };
 
-// EXPORTAR CONTROLADORES
+// Exportar controladores
 module.exports = {
   crearTicket,
   listarTickets,

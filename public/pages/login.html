@@ -1,18 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       LOGIN.HTML - PÁGINA DE INICIO DE SESIÓN
-       ============================================================
-       Formulario de login con email y contraseña.
-       Incluye validación en tiempo real del email.
-       Al loguearse, redirige al catálogo.
-       
-       Endpoint: POST /api/auth/login
-       Body: { email, contrasena }
-       
-       Referencia: Imagen 2 - Flujo de autenticación
-       ============================================================ -->
+  <!-- Página de login con formulario y validación de email. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Iniciar Sesión - Ensigna </title>
@@ -25,17 +14,7 @@
   <div id="navbar-container"></div>
 
   <main class="container py-4">
-    <!-- ============================================================
-         FORMULARIO DE LOGIN
-         ============================================================
-         Usamos la clase .form-card (definida en styles.css) para
-         centrar y estilizar el formulario como una tarjeta.
-         
-         Cada campo tiene:
-         - Label accesible (asociado con for/id)
-         - Input con placeholder descriptivo
-         - Div .validation-message para mensajes de error en tiempo real
-         ============================================================ -->
+    <!-- Formulario de login manejado por auth.js -->
     <div class="form-card">
       <h2><i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión</h2>
 

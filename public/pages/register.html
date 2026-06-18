@@ -1,23 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       REGISTER.HTML - PÁGINA DE REGISTRO DE USUARIO
-       ============================================================
-       Formulario de registro con: email, nombre, contraseña y
-       confirmación de contraseña. Incluye:
-       - Validación en tiempo real de cada campo (regex del backend)
-       - Indicador visual de fortaleza de contraseña
-       - Verificación de coincidencia de contraseñas
-       
-       Endpoint: POST /api/auth/registro
-       Body: { email, nombre, contrasena }
-       
-       REGEX USADOS (mismos que middleware/validators.js):
-       - EMAIL: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-       - NAME:  /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]{2,100}$/
-       - PASSWORD: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/
-       ============================================================ -->
+  <!-- Página de registro con validación y barra de fortaleza. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro - Ensigna </title>

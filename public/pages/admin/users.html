@@ -1,21 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       ADMIN/USERS.HTML - GESTIÓN DE USUARIOS
-       ============================================================
-       Tabla con todos los usuarios del sistema.
-       Muestra: ID, nombre, email, rol (badge) y botón eliminar.
-       
-       Los usuarios con rol "Admin" no se pueden eliminar
-       (el botón está deshabilitado).
-       
-       REQUIERE ROL ADMIN.
-       
-       Endpoints:
-         GET    /api/admin/usuarios     → listar todos
-         DELETE /api/admin/usuarios/:id → eliminar
-       ============================================================ -->
+  <!-- Página admin de usuarios con tabla y acciones. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Usuarios - Admin</title>
@@ -47,13 +33,7 @@
     <!-- Contenedor de alertas -->
     <div id="users-alerts"></div>
 
-    <!-- ============================================================
-         TABLA DE USUARIOS
-         ============================================================
-         Lista todos los usuarios registrados con su rol.
-         El botón eliminar está deshabilitado para admins
-         (no puedes eliminar a otro admin).
-         ============================================================ -->
+    <!-- Tabla de usuarios administrada por admin.js -->
     <div class="table-responsive">
       <table class="table table-hover table-admin align-middle">
         <thead class="table-dark">

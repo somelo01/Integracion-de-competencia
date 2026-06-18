@@ -1,23 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       CHECKOUT.HTML - CONFIRMACIÓN Y PAGO
-       ============================================================
-       Muestra un resumen del pedido (productos del carrito) y
-       un botón para confirmar y pagar con Webpay.
-       
-       FLUJO:
-       1. Se cargan los ítems del carrito como resumen (no editable)
-       2. El usuario hace click en "Confirmar y Pagar"
-       3. JS crea el pedido (POST /api/pedidos/crear)
-       4. JS inicia el pago (POST /api/pagos/crear)
-       5. Se redirige a Webpay para que el usuario pague
-       
-       REQUIERE AUTENTICACIÓN.
-       
-       Referencia: Imagen 6 - Flujo de pago con Webpay
-       ============================================================ -->
+  <!-- Página de checkout con resumen de pedido y pago. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Confirmar Pedido - Ensigna </title>
@@ -38,12 +22,7 @@
     <div id="checkout-alerts"></div>
 
     <div class="row">
-      <!-- ============================================================
-           RESUMEN DEL PEDIDO
-           ============================================================
-           Tabla con los productos del carrito (solo lectura).
-           Para editar, el usuario debe volver al carrito.
-           ============================================================ -->
+      <!-- Resumen de los productos del pedido -->
       <div class="col-lg-8">
         <div class="card mb-4">
           <div class="card-header bg-dark text-white">
@@ -76,12 +55,7 @@
         </a>
       </div>
 
-      <!-- ============================================================
-           PANEL DE PAGO (columna derecha)
-           ============================================================
-           Muestra el total y el botón para procesar el pago.
-           El botón ejecuta processPayment() de checkout.js.
-           ============================================================ -->
+      <!-- Panel de pago con total y botón de confirmación -->
       <div class="col-lg-4">
         <div class="card">
           <div class="card-header bg-primary text-white">

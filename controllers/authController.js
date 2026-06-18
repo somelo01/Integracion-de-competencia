@@ -1,62 +1,14 @@
-// ============================================================
-// CONTROLADOR: AUTENTICACIÓN (authController.js)
-// ============================================================
-// Este controlador maneja todo lo relacionado con la identidad
-// del usuario: registro, login, logout, perfil y recuperación
-// de contraseña.
-//
-// RELACIÓN CON DIAGRAMAS DEL PROYECTO:
-//   - Casos de Uso (imagen 2): "Registrarse", "Iniciar Sesión",
-//     "Cerrar Sesión", "Recuperar Contraseña"
-//   - Diagrama de Clases (imagen.png): Clase "Usuarios" con sus
-//     atributos y métodos
-//   - ERD (imagen 4): Tablas "usuarios" y "recuperar_acceso"
-//
-// RELACIÓN CON OTROS ARCHIVOS:
-//   - routes/authRoutes.js → Define qué URL llama a qué función de aquí
-//   - middleware/validators.js → validateRegister y validateLogin se
-//     ejecutan ANTES de que la petición llegue aquí
-//   - middleware/auth.js → isAuthenticated protege rutas que
-//     necesitan sesión activa
-//   - config/db.js → pool para consultas a MySQL
-//
-// SEGURIDAD IMPLEMENTADA:
-//   - Contraseñas hasheadas con bcrypt (nunca texto plano)
-//   - Consultas parametrizadas (prevención de SQL Injection)
-//   - Sesiones con cookies httpOnly (prevención de XSS)
-//   - Validación de entrada en middleware (prevención de datos maliciosos)
-// ============================================================
+// Controlador auth: gestiona registro, login, perfil, logout y recuperación.
+// Usa bcrypt para hash de contraseñas y validación previa en middleware.
+// Rutas en routes/authRoutes.js y pool de MySQL en config/db.js.
 
 const bcrypt = require('bcryptjs');       // Librería para hashear contraseñas
 const crypto = require('crypto');         // Módulo nativo de Node.js para generar tokens seguros
 const { pool } = require('../config/db'); // Pool de conexiones MySQL
 
-// ============================================================
-// REGISTRO DE USUARIO
-// ============================================================
-// Crea un nuevo usuario en la base de datos.
-//
-// FLUJO:
-//   1. validateRegister (middleware) ya validó email, nombre, contraseña
-//   2. Verificar que el email no exista ya en la BD
-//   3. Hashear la contraseña con bcrypt (10 rondas de sal)
-//   4. Insertar el usuario en la tabla 'usuarios'
-//   5. Crear automáticamente su carrito de compras (tabla 'carrito_compras')
-//
-// ¿POR QUÉ BCRYPT?
-//   bcrypt añade una "sal" (salt) aleatoria a cada contraseña antes de
-//   hashearla. Esto significa que dos usuarios con la misma contraseña
-//   tendrán hashes DIFERENTES en la BD. Un atacante que robe la BD
-//   no puede descifrar las contraseñas fácilmente.
-//
-// ¿POR QUÉ CREAR EL CARRITO AL REGISTRAR?
-//   Según el ERD (imagen 4), cada usuario tiene exactamente UN carrito
-//   (relación 1:1 con UNIQUE en id_usuario). Crearlo aquí garantiza
-//   que siempre exista cuando el usuario quiera agregar productos.
-//
-// RUTA: POST /api/auth/registro
-// MIDDLEWARE PREVIO: validateRegister (validators.js)
-// ============================================================
+// registrar: crea usuario, hashea contraseña y crea carrito.
+// Uso: POST /api/auth/registro
+// Middleware previo: validateRegister
 const registrar = async (req, res) => {
   try {
     const { email, nombre, contrasena } = req.body;
@@ -124,31 +76,9 @@ const registrar = async (req, res) => {
   }
 };
 
-// ============================================================
-// INICIO DE SESIÓN (LOGIN)
-// ============================================================
-// Verifica las credenciales del usuario y crea una sesión.
-//
-// FLUJO:
-//   1. validateLogin (middleware) ya validó formato de email y contraseña
-//   2. Buscar el usuario por email en la BD
-//   3. Comparar la contraseña enviada con el hash almacenado (bcrypt.compare)
-//   4. Si coinciden, guardar datos en la sesión (req.session)
-//
-// ¿QUÉ SE GUARDA EN LA SESIÓN?
-//   - userId → Para identificar al usuario en peticiones futuras
-//   - userName → Para mostrar "Hola, María" en el frontend
-//   - email → Para mostrar en el perfil
-//   - rol → Para verificar permisos (Admin vs Cliente)
-//
-// ESTOS DATOS SON USADOS POR:
-//   - middleware/auth.js → Verifica req.session.userId
-//   - middleware/adminAuth.js → Verifica req.session.rol === 'Admin'
-//   - Todos los controladores → Usan req.session.userId para consultas
-//
-// RUTA: POST /api/auth/login
-// MIDDLEWARE PREVIO: validateLogin (validators.js)
-// ============================================================
+// login: valida credenciales y crea la sesión del usuario.
+// Uso: POST /api/auth/login
+// Middleware previo: validateLogin
 const login = async (req, res) => {
   try {
     const { email, contrasena } = req.body;
@@ -223,19 +153,9 @@ const login = async (req, res) => {
   }
 };
 
-// ============================================================
-// CERRAR SESIÓN (LOGOUT)
-// ============================================================
-// Destruye la sesión actual del usuario.
-//
-// FLUJO:
-//   1. isAuthenticated (middleware) ya verificó que hay sesión activa
-//   2. req.session.destroy() elimina los datos de sesión de MySQL
-//   3. res.clearCookie() elimina la cookie del navegador
-//
-// RUTA: POST /api/auth/logout
-// MIDDLEWARE PREVIO: isAuthenticated (auth.js)
-// ============================================================
+// logout: destruye la sesión del usuario.
+// Uso: POST /api/auth/logout
+// Middleware previo: isAuthenticated
 const logout = async (req, res) => {
   try {
     // destroy() elimina la sesión de la tabla 'sessions' en MySQL
@@ -272,18 +192,9 @@ const logout = async (req, res) => {
   }
 };
 
-// ============================================================
-// OBTENER PERFIL DEL USUARIO
-// ============================================================
-// Devuelve los datos del usuario autenticado actualmente.
-// El frontend usa esto para mostrar la página de perfil.
-//
-// SEGURIDAD: Solo devuelve datos del usuario de la sesión actual.
-// Un usuario NO puede ver el perfil de otro usuario.
-//
-// RUTA: GET /api/auth/perfil
-// MIDDLEWARE PREVIO: isAuthenticated (auth.js)
-// ============================================================
+// obtenerPerfil: devuelve datos del usuario autenticado.
+// Uso: GET /api/auth/perfil
+// Middleware previo: isAuthenticated
 const obtenerPerfil = async (req, res) => {
   try {
     // req.session.userId fue establecido durante el login
@@ -320,21 +231,9 @@ const obtenerPerfil = async (req, res) => {
   }
 };
 
-// ============================================================
-// EDITAR PERFIL DEL USUARIO
-// ============================================================
-// Permite al usuario actualizar su nombre y/o contraseña.
-// El email NO se puede cambiar (es identificador único).
-//
-// FLUJO:
-//   1. Recibir nombre y/o nueva contraseña
-//   2. Si envía contraseña nueva, hashearla con bcrypt
-//   3. Actualizar en la BD solo los campos enviados
-//   4. Actualizar los datos en la sesión si cambió el nombre
-//
-// RUTA: PUT /api/auth/perfil
-// MIDDLEWARE PREVIO: isAuthenticated (auth.js)
-// ============================================================
+// editarPerfil: actualiza nombre y/o contraseña del usuario.
+// Uso: PUT /api/auth/perfil
+// Middleware previo: isAuthenticated
 const editarPerfil = async (req, res) => {
   try {
     const { nombre, contrasena } = req.body;
@@ -400,26 +299,9 @@ const editarPerfil = async (req, res) => {
   }
 };
 
-// ============================================================
-// SOLICITAR RECUPERACIÓN DE CONTRASEÑA
-// ============================================================
-// Genera un token único de recuperación y lo guarda en la BD.
-// En un sistema real, se enviaría por email al usuario.
-// En este proyecto educativo, se devuelve en la respuesta.
-//
-// FLUJO (Basado en tabla recuperar_acceso del ERD - imagen 4):
-//   1. Verificar que el email existe en la BD
-//   2. Generar un token aleatorio con crypto.randomBytes
-//   3. Guardar el token en la tabla 'recuperar_acceso' con expiración de 1 hora
-//   4. Devolver el token (en producción se enviaría por email)
-//
-// ¿POR QUÉ crypto.randomBytes?
-//   Genera bytes aleatorios criptográficamente seguros.
-//   Es mucho más seguro que Math.random() porque usa la entropía
-//   del sistema operativo. 32 bytes = 64 caracteres hexadecimales.
-//
+// Solicitar recuperación de contraseña.
+// Genera token seguro y guarda en recuperar_acceso.
 // RUTA: POST /api/auth/recuperar
-// ============================================================
 const solicitarRecuperacion = async (req, res) => {
   try {
     const { email } = req.body;
@@ -491,24 +373,9 @@ const solicitarRecuperacion = async (req, res) => {
   }
 };
 
-// ============================================================
-// RESTABLECER CONTRASEÑA (con token)
-// ============================================================
-// Permite al usuario establecer una nueva contraseña usando
-// el token de recuperación generado previamente.
-//
-// FLUJO:
-//   1. Recibir el token por URL params y la nueva contraseña por body
-//   2. Buscar el token en la BD y verificar que:
-//      - Exista
-//      - No haya sido usado (usado = 0)
-//      - No haya expirado (expiracion > ahora)
-//   3. Hashear la nueva contraseña
-//   4. Actualizar la contraseña del usuario
-//   5. Marcar el token como usado (usado = 1)
-//
+// Restablecer contraseña con token.
+// Busca token válido, actualiza contraseña y marca como usado.
 // RUTA: POST /api/auth/reset/:token
-// ============================================================
 const restablecerContrasena = async (req, res) => {
   try {
     const { token } = req.params;
@@ -577,28 +444,9 @@ const restablecerContrasena = async (req, res) => {
   }
 };
 
-// ============================================================
-// VERIFICAR SESIÓN
-// ============================================================
-// Endpoint que el frontend llama al cargar cada página para
-// saber si el usuario tiene una sesión activa.
-//
-// ¿POR QUÉ ES NECESARIO?
-// Cuando el usuario navega a una nueva página o refresca el
-// navegador, el JavaScript se recarga y pierde su estado.
-// Este endpoint permite que el frontend "recuerde" quién es
-// el usuario consultando la cookie de sesión.
-//
-// FLUJO EN EL FRONTEND:
-//   1. Página carga → fetch('/api/auth/session')
-//   2. Si success=true → mostrar UI de usuario logueado
-//   3. Si success=false → mostrar UI de visitante
-//
-// NOTA: Este endpoint NO necesita isAuthenticated porque
-// justamente su propósito es verificar si hay sesión o no.
-//
+// Verificar sesión activa.
+// Retorna datos de usuario si la sesión existe.
 // RUTA: GET /api/auth/session
-// ============================================================
 const verificarSesion = async (req, res) => {
   try {
     // Si hay datos de sesión, el usuario está logueado
@@ -635,12 +483,7 @@ const verificarSesion = async (req, res) => {
   }
 };
 
-// ============================================================
-// EXPORTAR TODOS LOS CONTROLADORES
-// ============================================================
-// Cada función se exporta con nombre descriptivo para que
-// authRoutes.js pueda importarlas y asignarlas a las rutas.
-// ============================================================
+// Exportar controladores
 module.exports = {
   registrar,
   login,

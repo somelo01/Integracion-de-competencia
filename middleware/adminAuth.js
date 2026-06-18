@@ -1,24 +1,5 @@
-// ============================================================
-// MIDDLEWARE: AUTORIZACIÓN DE ADMINISTRADOR
-// ============================================================
-// Verifica que el usuario logueado tenga el rol 'Admin'.
-// Se usa DESPUÉS de isAuthenticated en las rutas del panel admin.
-//
-// CADENA DE MIDDLEWARE EN RUTAS ADMIN:
-//   router.get('/admin/productos', isAuthenticated, isAdmin, adminController.listarProductos);
-//   1. isAuthenticated → ¿Está logueado? Si no → 401
-//   2. isAdmin → ¿Es admin? Si no → 403
-//   3. adminController.listarProductos → Ejecutar la lógica
-//
-// DIFERENCIA ENTRE 401 Y 403:
-//   401 (Unauthorized) = No se ha identificado (no hay sesión)
-//   403 (Forbidden) = Se identificó pero NO tiene permiso
-//
-// RELACIÓN CON OTROS ARCHIVOS:
-//   - middleware/auth.js → Se usa antes de este middleware
-//   - controllers/authController.js → Establece req.session.rol en login
-//   - routes/adminRoutes.js → Usa ambos middlewares en todas sus rutas
-// ============================================================
+// Middleware isAdmin: permite acceso solo a usuarios con rol Admin.
+// Se debe aplicar después de isAuthenticated en rutas admin.
 
 function isAdmin(req, res, next) {
   // Verificar que el rol en la sesión sea 'Admin'

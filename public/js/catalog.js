@@ -1,29 +1,7 @@
-// ============================================================
-// CATALOG.JS - LÓGICA DEL CATÁLOGO Y DETALLE DE PRODUCTO
-// ============================================================
-// Maneja tres páginas:
-//   1. index.html  → Productos destacados en la landing page
-//   2. catalog.html → Catálogo completo con filtros y paginación
-//   3. product.html → Detalle de un producto individual
-//
-// DEPENDE DE: utils.js (REGEX, apiRequest, showAlert, formatCurrency,
-//             debounce, getQueryParam, loadCartCount)
-//
-// ENDPOINTS USADOS:
-//   GET /api/productos?page=N&limit=N       → lista paginada
-//   GET /api/productos/buscar?q=TERM        → búsqueda por texto
-//   GET /api/productos/filtrar?categoria=X  → filtros avanzados
-//   GET /api/productos/categorias           → lista de categorías
-//   GET /api/productos/:id                  → detalle de un producto
-//   POST /api/carrito/agregar               → agregar al carrito
-//
-// Referencia: Imagen 3 - Diagrama del catálogo de productos
-// ============================================================
+// catalog.js - muestra el catálogo, filtros, búsqueda y detalle de producto.
 
 
-// ============================================================
-// INICIALIZACIÓN AL CARGAR LA PÁGINA
-// ============================================================
+// Inicia el catálogo según la página activa.
 document.addEventListener('DOMContentLoaded', () => {
   // Detectar en qué página estamos y ejecutar la función correspondiente
   const productGrid = document.getElementById('product-grid');
@@ -47,22 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// ============================================================
-// VARIABLE GLOBAL: Estado del catálogo
-// ============================================================
-// Almacena la página actual para la paginación.
-// Se modifica cuando el usuario navega entre páginas.
-// ============================================================
+// Estado global de paginación del catálogo.
 let currentPage = 1;
-const productsPerPage = 12; // Cantidad de productos por página
+const productsPerPage = 12;
 
 
-// ============================================================
-// FUNCIÓN: initCatalog() - INICIALIZAR PÁGINA DE CATÁLOGO
-// ============================================================
-// Configura la búsqueda, los filtros y carga los productos.
-// Esta es la función principal del catálogo.
-// ============================================================
+// Configura búsqueda, filtros y carga inicial del catálogo.
 async function initCatalog() {
   // Cargar la lista de categorías para el filtro lateral
   await loadCategories();
@@ -70,12 +38,7 @@ async function initCatalog() {
   // Cargar productos de la primera página
   loadProducts();
 
-  // ---------------------------------------------------------
-  // BÚSQUEDA CON DEBOUNCE
-  // ---------------------------------------------------------
-  // El debounce evita enviar una petición por cada letra.
-  // Espera 400ms después de la última tecla para buscar.
-  // ---------------------------------------------------------
+  // Búsqueda con debounce para no enviar peticiones por cada tecla.
   const searchInput = document.getElementById('search-input');
   if (searchInput) {
     // Crear versión "debounced" de la función de búsqueda
@@ -93,9 +56,7 @@ async function initCatalog() {
     });
   }
 
-  // ---------------------------------------------------------
-  // BOTÓN DE APLICAR FILTROS
-  // ---------------------------------------------------------
+  // Botón para aplicar filtros.
   const filterBtn = document.getElementById('btn-apply-filters');
   if (filterBtn) {
     filterBtn.addEventListener('click', () => {
@@ -114,14 +75,7 @@ async function initCatalog() {
 }
 
 
-// ============================================================
-// FUNCIÓN: loadProducts() - CARGAR PRODUCTOS PAGINADOS
-// ============================================================
-// Obtiene la lista de productos de la API con paginación.
-// Renderiza las tarjetas de producto en el grid.
-//
-// Endpoint: GET /api/productos?page=N&limit=N
-// ============================================================
+// Carga productos paginados y muestra tarjetas en el grid.
 async function loadProducts() {
   const grid = document.getElementById('product-grid');
   if (!grid) return;
@@ -176,13 +130,7 @@ async function loadProducts() {
 }
 
 
-// ============================================================
-// FUNCIÓN: searchProducts() - BUSCAR PRODUCTOS POR TEXTO
-// ============================================================
-// Busca productos que coincidan con el término de búsqueda.
-//
-// Endpoint: GET /api/productos/buscar?q=TERM
-// ============================================================
+// Busca productos por texto y actualiza el grid.
 async function searchProducts(query) {
   const grid = document.getElementById('product-grid');
   if (!grid) return;
@@ -231,14 +179,7 @@ async function searchProducts(query) {
 }
 
 
-// ============================================================
-// FUNCIÓN: applyFilters() - APLICAR FILTROS DEL SIDEBAR
-// ============================================================
-// Lee los valores de los filtros del sidebar y envía la
-// petición al endpoint de filtrado.
-//
-// Endpoint: GET /api/productos/filtrar?categoria=X&precio_min=Y&...
-// ============================================================
+// Aplica filtros y actualiza el catálogo con resultados filtrados.
 async function applyFilters() {
   const grid = document.getElementById('product-grid');
   if (!grid) return;
@@ -303,11 +244,7 @@ async function applyFilters() {
 }
 
 
-// ============================================================
-// FUNCIÓN: clearFilters() - LIMPIAR TODOS LOS FILTROS
-// ============================================================
-// Resetea los valores de los filtros y recarga todos los productos.
-// ============================================================
+// Limpia los filtros y recarga los productos.
 function clearFilters() {
   // Limpiar cada control de filtro
   const filterCategory = document.getElementById('filter-category');
@@ -329,14 +266,7 @@ function clearFilters() {
 }
 
 
-// ============================================================
-// FUNCIÓN: loadCategories() - CARGAR CATEGORÍAS PARA FILTROS
-// ============================================================
-// Obtiene la lista de categorías del backend y llena el
-// <select> de categorías en el sidebar de filtros.
-//
-// Endpoint: GET /api/productos/categorias
-// ============================================================
+// Carga categorías para el filtro lateral.
 async function loadCategories() {
   const categorySelect = document.getElementById('filter-category');
   if (!categorySelect) return;
@@ -362,17 +292,7 @@ async function loadCategories() {
 }
 
 
-// ============================================================
-// FUNCIÓN: renderProductCards() - RENDERIZAR TARJETAS
-// ============================================================
-// Genera el HTML de las tarjetas de producto y las inserta
-// en el grid. Cada tarjeta es clickeable (va al detalle) y
-// tiene un botón "Agregar al carrito".
-//
-// PARÁMETROS:
-//   container - Elemento DOM del grid (div.row)
-//   products  - Array de objetos producto del servidor
-// ============================================================
+// Genera las tarjetas de producto en el grid.
 function renderProductCards(container, products) {
   // Generar HTML de cada tarjeta usando template literals
   container.innerHTML = products.map(product => `
@@ -410,12 +330,7 @@ function renderProductCards(container, products) {
 }
 
 
-// ============================================================
-// FUNCIÓN: renderPagination() - RENDERIZAR PAGINACIÓN
-// ============================================================
-// Crea los botones de paginación (Anterior, 1, 2, 3..., Siguiente)
-// usando el componente pagination de Bootstrap.
-// ============================================================
+// Muestra la paginación del catálogo.
 function renderPagination(totalPages) {
   const container = document.getElementById('pagination-container');
   if (!container || totalPages <= 1) {
@@ -457,11 +372,7 @@ function renderPagination(totalPages) {
 }
 
 
-// ============================================================
-// FUNCIÓN: changePage() - CAMBIAR DE PÁGINA
-// ============================================================
-// Actualiza la página actual y recarga los productos.
-// ============================================================
+// Cambia la página y recarga productos.
 function changePage(page) {
   currentPage = page;
   loadProducts();
@@ -470,15 +381,7 @@ function changePage(page) {
 }
 
 
-// ============================================================
-// FUNCIÓN: addToCartFromCatalog() - AGREGAR AL CARRITO
-// ============================================================
-// Agrega 1 unidad de un producto al carrito desde el catálogo.
-// Se llama al hacer click en el botón "Agregar" de una tarjeta.
-//
-// Endpoint: POST /api/carrito/agregar
-// Body: { id_producto, cantidad: 1 }
-// ============================================================
+// Agrega un producto al carrito desde el catálogo.
 async function addToCartFromCatalog(productId) {
   try {
     const response = await apiRequest('/api/carrito/agregar', 'POST', {
@@ -505,12 +408,7 @@ async function addToCartFromCatalog(productId) {
 }
 
 
-// ============================================================
-// FUNCIÓN: showToast() - MOSTRAR NOTIFICACIÓN FLOTANTE
-// ============================================================
-// Muestra un mensaje tipo "toast" que desaparece después de
-// unos segundos. Se usa para feedback rápido (ej: "agregado al carrito").
-// ============================================================
+// Muestra un toast temporal en pantalla.
 function showToast(message, type = 'success') {
   // Crear o encontrar el contenedor de toasts
   let toastContainer = document.getElementById('toast-container');
@@ -550,15 +448,7 @@ function showToast(message, type = 'success') {
 }
 
 
-// ============================================================
-// FUNCIÓN: initProductDetail() - INICIALIZAR DETALLE DE PRODUCTO
-// ============================================================
-// Carga los datos de un producto específico y renderiza su
-// página de detalle. Lee el ID del producto desde la URL.
-//
-// URL: /pages/product.html?id=42
-// Endpoint: GET /api/productos/42
-// ============================================================
+// Carga y muestra los datos del producto desde la URL.
 async function initProductDetail() {
   const container = document.getElementById('product-detail');
   if (!container) return;
@@ -614,13 +504,7 @@ async function initProductDetail() {
 }
 
 
-// ============================================================
-// FUNCIÓN: renderProductDetail() - RENDERIZAR DETALLE
-// ============================================================
-// Genera el HTML completo de la página de detalle de producto:
-// imagen grande, nombre, descripción, precio, selector de
-// cantidad y botón agregar al carrito.
-// ============================================================
+// Renderiza la página de detalle de un producto.
 function renderProductDetail(container, product) {
   container.innerHTML = `
     <div class="row animate-in">
@@ -689,9 +573,7 @@ function renderProductDetail(container, product) {
     </div>
   `;
 
-  // ---------------------------------------------------------
-  // EVENTO: Agregar al carrito desde la página de detalle
-  // ---------------------------------------------------------
+  // Evento para agregar el producto al carrito desde el detalle.
   const addBtn = document.getElementById('btn-add-to-cart');
   if (addBtn) {
     addBtn.addEventListener('click', async () => {
@@ -732,12 +614,7 @@ function renderProductDetail(container, product) {
 }
 
 
-// ============================================================
-// FUNCIÓN: loadFeaturedProducts() - CARGAR PRODUCTOS DESTACADOS
-// ============================================================
-// Carga los primeros 4 productos para la landing page.
-// Se muestra en la sección "Productos Destacados" del index.html.
-// ============================================================
+// Carga productos destacados para la página principal.
 async function loadFeaturedProducts() {
   const grid = document.getElementById('featured-products');
   if (!grid) return;

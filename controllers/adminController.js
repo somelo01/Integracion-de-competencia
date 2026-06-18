@@ -1,15 +1,5 @@
-// CONTROLADOR ADMINISTRACIÓN 
-// Maneja las operaciones del panel de administración.
-// Incluye gestión de productos, usuarios, pedidos, soporte y dashboard.
-
-// RELACIÓN CON DIAGRAMAS DEL PROYECTO:
-// Casos de Uso del Admin: todos los casos de uso del lado derecho del diagrama
-// ERD: Acceso a todas las tablas del sistema
-// Diagrama de Secuencia: Devolución/Reembolso
-// Diagrama de Estados: Transiciones de pedidos
-
-// SEGURIDAD:
-// Todas las rutas de admin pasan por isAuthenticated e isAdmin
+// Controlador admin: gestiona productos, usuarios, pedidos y soporte.
+// Rutas admin deben pasar por isAuthenticated e isAdmin.
 
 const { pool } = require('../config/db');
 
@@ -63,10 +53,6 @@ const listarTodosProductos = async (req, res) => {
 
 // CREAR PRODUCTO
 // Agrega un nuevo producto al catálogo
-// FLUJO:
-// validateProduct ya validó nombre, categoría, precio y stock
-// Insertar el producto en la tabla 'gestion_productos'
-// El producto se crea como activo=1 por defecto
 const crearProducto = async (req, res) => {
   try {
     const { nombre, categoria, precio, stock, talla, color, descripcion, imagen_url } = req.body;
@@ -114,10 +100,6 @@ const crearProducto = async (req, res) => {
 
 // EDITAR PRODUCTO
 // Actualiza los datos de un producto existente dinámicamente
-// FLUJO:
-// Verificar que el producto exista
-// Construir consulta dinámica con los campos enviados
-// Ejecutar UPDATE
 const editarProducto = async (req, res) => {
   try {
     const { id } = req.params;
@@ -507,11 +489,6 @@ const listarTodosPedidos = async (req, res) => {
 
 // ACTUALIZAR ESTADO DE PEDIDO
 // Permite al admin cambiar el estado de un pedido validando transiciones
-// FLUJO:
-// Validar estado enviado
-// Obtener pedido actual
-// Validar transiciones permitidas
-// Actualizar el estado
 const actualizarEstado = async (req, res) => {
   try {
     const { id } = req.params;
@@ -654,10 +631,6 @@ const listarTodosTickets = async (req, res) => {
 
 // RESPONDER TICKET
 // El admin agrega una respuesta a un ticket de soporte y actualiza estado
-// FLUJO:
-// Validar respuesta
-// Verificar que el ticket exista
-// Actualizar ticket con respuesta y estado
 const responderTicket = async (req, res) => {
   try {
     const { id } = req.params;
@@ -718,14 +691,6 @@ const responderTicket = async (req, res) => {
 
 // PROCESAR REEMBOLSO
 // Procesa una solicitud de reembolso asociada a un ticket usando una transacción
-// FLUJO:
-// Verificar ticket, pedido y pago
-// Iniciar transacción
-// Actualizar pago a Reembolsado
-// Actualizar pedido a Cancelado
-// Restaurar stock
-// Cerrar el ticket
-// Commit
 const procesarReembolso = async (req, res) => {
   let connection;
 
@@ -936,7 +901,7 @@ const obtenerEstadisticas = async (req, res) => {
   }
 };
 
-// EXPORTAR TODOS LOS CONTROLADORES
+// Exportar controladores
 module.exports = {
   listarTodosProductos,
   crearProducto,

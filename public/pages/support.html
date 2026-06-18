@@ -1,29 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       SUPPORT.HTML - SOPORTE Y TICKETS
-       ============================================================
-       Página con dos secciones:
-       1. Formulario para crear un nuevo ticket de soporte
-       2. Lista de tickets existentes del usuario
-       
-       TIPOS DE TICKET:
-       - Consulta: pregunta general
-       - Reembolso: requiere seleccionar un pedido
-       - Problema Técnico: error en la plataforma
-       - Otro: cualquier otro tema
-       
-       Si el usuario llega desde un pedido (botón "Solicitar reembolso"),
-       la URL trae parámetros: ?tipo=Reembolso&pedido=42
-       y el formulario se pre-llena automáticamente.
-       
-       REQUIERE AUTENTICACIÓN.
-       
-       Endpoints:
-         POST /api/soporte/crear → crear ticket
-         GET  /api/soporte       → listar tickets
-       ============================================================ -->
+  <!-- Página de soporte con formulario y lista de tickets. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Soporte - Ensigna </title>
@@ -44,9 +22,7 @@
     <div id="support-alerts"></div>
 
     <div class="row">
-      <!-- ============================================================
-           FORMULARIO DE NUEVO TICKET (columna izquierda)
-           ============================================================ -->
+      <!-- Formulario de nuevo ticket -->
       <div class="col-lg-5 mb-4">
         <div class="card">
           <div class="card-header bg-primary text-white">
@@ -113,13 +89,7 @@
         </div>
       </div>
 
-      <!-- ============================================================
-           LISTA DE TICKETS EXISTENTES (columna derecha)
-           ============================================================
-           Muestra los tickets del usuario como tarjetas expandibles.
-           Al hacer click en una tarjeta, se expande para mostrar
-           los detalles y la respuesta del admin (si existe).
-           ============================================================ -->
+      <!-- Lista de tickets del usuario cargada por JS -->
       <div class="col-lg-7">
         <h4 class="mb-3">
           <i class="bi bi-list-task me-2"></i>Mis Tickets

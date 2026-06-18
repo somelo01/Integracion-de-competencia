@@ -1,26 +1,11 @@
-// CONTROLADOR: PRODUCTOS
-// Maneja las operaciones del catálogo de productos.
-
-// RELACIÓN CON DIAGRAMAS DEL PROYECTO:
-// Casos de Uso: "Buscar Productos", "Filtrar por Categoría/Precio", "Ver Detalle de Producto"
-// Diagrama de Clases: Clase "Gestion_Productos" 
-// ERD: Tabla "gestion_productos"
-// Diagrama de Secuencia: El catálogo es el primer paso antes del proceso de compra
-
-// NOTA SOBRE PRODUCTOS "ACTIVOS":
-// El campo 'activo' funciona como un "soft delete" (borrado lógico). Las funciones públicas SOLO muestran productos con activo=1.
+// Controlador productos: lista y busca productos activos del catálogo.
+// SOLO muestra productos con activo=1.
 
 const { pool } = require('../config/db');
 
 
 // LISTAR PRODUCTOS
 // Devuelve una lista paginada de productos activos.
-// FLUJO:
-// Obtener parámetros de paginación del query string
-// Calcular el OFFSET
-// Contar total de productos activos
-// Obtener los productos de la página actual
-// Calcular total de páginas
 const listarProductos = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -68,10 +53,6 @@ const listarProductos = async (req, res) => {
 
 // BUSCAR PRODUCTOS
 // Busca productos cuyo nombre o descripción contengan el término de búsqueda usando LIKE.
-// FLUJO:
-// Validar que se envió un término de búsqueda
-// Construir el término con comodines para LIKE
-// Buscar en nombre y descripción solo productos activos
 const buscarProductos = async (req, res) => {
   try {
     const { q } = req.query;
@@ -117,10 +98,6 @@ const buscarProductos = async (req, res) => {
 
 // FILTRAR PRODUCTOS
 // Filtra productos según múltiples criterios opcionales.
-// FLUJO:
-// Construir consulta dinámica agregando filtros enviados
-// Ordenar por precio ascendente
-// Ejecutar la consulta
 const filtrarProductos = async (req, res) => {
   try {
     const { categoria, precio_min, precio_max, talla, color } = req.query;
@@ -250,7 +227,7 @@ const obtenerProducto = async (req, res) => {
   }
 };
 
-// EXPORTAR CONTROLADORES
+// Exportar controladores
 module.exports = {
   listarProductos,
   buscarProductos,

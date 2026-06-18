@@ -1,21 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       ORDERS.HTML - HISTORIAL DE PEDIDOS
-       ============================================================
-       Lista todos los pedidos del usuario autenticado con:
-       ID, fecha, estado (badge coloreado), total y acciones.
-       
-       Acciones disponibles:
-       - Ver detalle: navega a order-detail.html?id=X
-       - Cancelar: solo para pedidos con estado "Pendiente"
-       
-       REQUIERE AUTENTICACIÓN.
-       Endpoint: GET /api/pedidos?page=N
-       
-       Referencia: Imagen 5 - Diagrama de estados de pedidos
-       ============================================================ -->
+  <!-- Página de historial de pedidos del usuario. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mis Pedidos - Ensigna </title>
@@ -35,12 +21,7 @@
     <!-- Contenedor de alertas -->
     <div id="orders-alerts"></div>
 
-    <!-- ============================================================
-         TABLA DE PEDIDOS
-         ============================================================
-         Tabla responsive con la lista de pedidos del usuario.
-         El tbody se llena con JavaScript (orders.js).
-         ============================================================ -->
+    <!-- Tabla de pedidos cargada por JS -->
     <div id="orders-list">
       <div class="table-responsive">
         <table class="table table-hover align-middle">

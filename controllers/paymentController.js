@@ -1,67 +1,7 @@
-// ============================================================
-// CONTROLADOR: PAGOS (paymentController.js)
-// ============================================================
-// Maneja la integración con Transbank Webpay Plus para procesar
-// pagos de los pedidos. Webpay Plus es la pasarela de pago más
-// usada en Chile.
-//
-// RELACIÓN CON DIAGRAMAS DEL PROYECTO:
-//   - Diagrama de Secuencia: Proceso de Compra (imagen 5):
-//     Muestra el flujo completo:
-//     Cliente → Backend → Webpay → Backend → Cliente
-//   - ERD (imagen 4): Tablas "pagos" y "facturas"
-//   - Diagrama de Estados (imagen 3): Transiciones de pago:
-//     Pendiente → Aprobado / Rechazado / Cancelado
-//   - Casos de Uso (imagen 2): "Pagar con Webpay"
-//
-// ¿CÓMO FUNCIONA WEBPAY PLUS?
-//   Es un flujo de 3 pasos:
-//
-//   PASO 1: CREAR TRANSACCIÓN (crearTransaccion)
-//     - Backend envía datos del pedido a Transbank
-//     - Transbank devuelve una URL + token
-//     - Frontend redirige al usuario a esa URL de Transbank
-//
-//   PASO 2: PAGO EN WEBPAY (fuera de nuestro control)
-//     - El usuario ingresa datos de su tarjeta en el sitio de Transbank
-//     - Transbank procesa el pago
-//     - Transbank redirige al usuario de vuelta a nuestra returnUrl
-//
-//   PASO 3: CONFIRMAR PAGO (confirmarPago)
-//     - Webpay redirige al usuario a GET /api/pagos/confirmar?token_ws=XXX
-//     - Backend llama a tx.commit(token_ws) para confirmar
-//     - Actualizamos estado del pedido y pago
-//     - Creamos la factura
-//     - Redirigimos a página de éxito o error
-//
-// MODO SANDBOX (INTEGRACIÓN):
-//   Usamos credenciales de prueba de Transbank:
-//   - IntegrationCommerceCodes.WEBPAY_PLUS → Código de comercio de prueba
-//   - IntegrationApiKeys.WEBPAY → API key de prueba
-//   - Environment.Integration → Ambiente de pruebas
-//
-//   Tarjeta de prueba para testing:
-//   - Número: 4051 8856 0044 6623
-//   - CVV: 123
-//   - Fecha exp: cualquier fecha futura
-//   - RUT: 11.111.111-1
-//   - Contraseña: 123
-//
-// RELACIÓN CON OTROS ARCHIVOS:
-//   - routes/paymentRoutes.js → URLs que llaman estas funciones
-//   - controllers/orderController.js → Los pedidos se crean antes del pago
-//   - config/db.js → Pool para consultas MySQL
-//   - middleware/auth.js → crearTransaccion requiere sesión
-// ============================================================
+// Controlador pagos: integra Transbank Webpay Plus en sandbox.
 
 const { pool } = require('../config/db');
 
-// --- Importar Transbank SDK ---
-// WebpayPlus: Clase principal para crear transacciones
-// Options: Configuración del comercio
-// Environment: Ambiente (Integration = sandbox, Production = real)
-// IntegrationCommerceCodes: Código de comercio de prueba
-// IntegrationApiKeys: API key de prueba
 const {
   WebpayPlus,
   Options,
@@ -70,9 +10,7 @@ const {
   IntegrationApiKeys
 } = require('transbank-sdk');
 
-// --- Crear instancia de transacción Webpay ---
-// Esta instancia se reutiliza para todas las operaciones de pago.
-// En producción, se usarían credenciales reales del comercio.
+// Instancia Webpay para crear y confirmar transacciones.
 const tx = new WebpayPlus.Transaction(
   new Options(
     IntegrationCommerceCodes.WEBPAY_PLUS,  // Código de comercio de prueba
@@ -81,29 +19,9 @@ const tx = new WebpayPlus.Transaction(
   )
 );
 
-// ============================================================
-// CREAR TRANSACCIÓN DE PAGO
-// ============================================================
-// Inicia una transacción en Webpay Plus para un pedido específico.
-// Devuelve la URL de Webpay donde el usuario debe ir a pagar.
-//
-// PARÁMETROS QUE ENVÍA A TRANSBANK:
-//   - buyOrder: Identificador único del pedido (string, máx 26 chars)
-//   - sessionId: ID de la sesión para tracking (string)
-//   - amount: Monto total a cobrar (entero, sin decimales en CLP)
-//   - returnUrl: URL a donde Webpay redirige después del pago
-//
-// TRANSBANK RESPONDE:
-//   - url: URL del formulario de pago de Webpay
-//   - token: Token único de la transacción
-//
-// EL FRONTEND DEBE:
-//   Redirigir al usuario a: url + "?token_ws=" + token
-//   (O usar un formulario con POST hacia la URL de Webpay)
-//
-// RUTA: POST /api/pagos/crear
-// MIDDLEWARE: isAuthenticated
-// ============================================================
+// crearTransaccion: inicia pago Webpay para un pedido.
+// Uso: POST /api/pagos/crear
+// Middleware: isAuthenticated
 const crearTransaccion = async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -210,35 +128,9 @@ const crearTransaccion = async (req, res) => {
   }
 };
 
-// ============================================================
-// CONFIRMAR PAGO (callback de Webpay)
-// ============================================================
-// Este endpoint es llamado AUTOMÁTICAMENTE por Webpay cuando
-// el usuario completa (o cancela) el proceso de pago.
-//
-// ¿POR QUÉ ES GET?
-//   Webpay redirige el navegador del usuario con GET a la
-//   returnUrl que configuramos, agregando ?token_ws=XXX
-//   al query string. Es un redirect del navegador, no una
-//   llamada API del frontend.
-//
-// FLUJO:
-//   1. Webpay redirige a: /api/pagos/confirmar?token_ws=XXX
-//   2. Si no hay token_ws → el usuario canceló en Webpay
-//   3. Si hay token_ws → llamamos tx.commit(token_ws)
-//   4. Transbank responde con el resultado del pago
-//   5. Actualizamos estado del pago y pedido en nuestra BD
-//   6. Si aprobado → creamos factura
-//   7. Redirigimos al usuario a la página de resultado
-//
-// RESPONSE CODES DE TRANSBANK:
-//   response_code === 0 → Pago APROBADO
-//   response_code !== 0 → Pago RECHAZADO
-//
-// RUTA: GET /api/pagos/confirmar?token_ws=XXX
-// NOTA: No usa isAuthenticated porque es un redirect de Webpay
-//       (la sesión puede no estar disponible en el redirect)
-// ============================================================
+// confirmarPago: procesa el callback de Webpay tras el pago.
+// Uso: GET /api/pagos/confirmar?token_ws=XXX
+// No requiere isAuthenticated porque viene del redirect de Webpay.
 const confirmarPago = async (req, res) => {
   try {
     // --- Obtener token_ws del query string ---
@@ -353,15 +245,11 @@ const confirmarPago = async (req, res) => {
   }
 };
 
-// ============================================================
-// OBTENER INFORMACIÓN DE PAGO DE UN PEDIDO
-// ============================================================
+// Obtener información de pago de un pedido
 // Devuelve los datos del pago asociado a un pedido específico.
 // El frontend usa esto para mostrar el estado del pago.
-//
 // RUTA: GET /api/pagos/:idPedido
 // MIDDLEWARE: isAuthenticated
-// ============================================================
 const obtenerPago = async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -424,9 +312,7 @@ const obtenerPago = async (req, res) => {
   }
 };
 
-// ============================================================
-// EXPORTAR CONTROLADORES
-// ============================================================
+// Exportar controladores
 module.exports = {
   crearTransaccion,
   confirmarPago,

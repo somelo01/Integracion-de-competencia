@@ -1,21 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       INDEX.HTML - PÁGINA DE INICIO (LANDING PAGE)
-       ============================================================
-       Esta es la primera página que ve el usuario al entrar a la
-       tienda. Contiene:
-       1. Hero section: banner principal con CTA (Call to Action)
-       2. Productos destacados: grid de 4 productos populares
-       3. Secciones informativas: por qué elegirnos, etc.
-       
-       NO REQUIERE AUTENTICACIÓN: cualquier visitante puede verla.
-       
-       SCRIPTS: utils.js (navbar, apiRequest) + catalog.js (loadFeaturedProducts)
-       
-       Referencia: Imagen 1 - Wireframe de la landing page
-       ============================================================ -->
+  <!-- Página de inicio. Navbar dinámico y productos destacados cargados por JS. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ensigna - Ropa de Culto</title>
@@ -29,18 +15,10 @@
 </head>
 <body>
 
-  <!-- ============================================================
-       CONTENEDOR DEL NAVBAR
-       ============================================================
-       Este div vacío se llena dinámicamente con JavaScript.
-       La función loadNavbar() en utils.js genera el HTML del
-       navbar según si el usuario está logueado o no.
-       ============================================================ -->
+  <!-- Contenedor del navbar dinámico cargado por JS -->
   <div id="navbar-container"></div>
 
-  <!-- ============================================================
-       HERO SECTION - BANNER PRINCIPAL (Modificado para ENSIGNA)
-       ============================================================ -->
+  <!-- Hero section con CTA a catálogo -->
   <section class="hero-section text-center">
     <div class="container">
       <h1 style="color: #ffd700; font-weight: 900; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 20px;">
@@ -53,14 +31,10 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       CONTENIDO PRINCIPAL
-       ============================================================ -->
+  <!-- Contenido principal de la página -->
   <main class="container py-4">
 
-    <!-- ============================================================
-         PRODUCTOS DESTACADOS
-         ============================================================ -->
+    <!-- Productos destacados cargados por JS -->
     <section class="mb-5">
       <h2 class="text-center mb-4">
         <i class="bi bi-star me-2"></i>Productos Destacados
@@ -80,9 +54,7 @@
       </div>
     </section>
 
-    <!-- ============================================================
-         SECCIÓN INFORMATIVA - POR QUÉ ELEGIRNOS
-         ============================================================ -->
+    <!-- Sección informativa de beneficios -->
     <section class="mb-5">
       <h2 class="text-center mb-4">¿Por qué elegirnos?</h2>
       <div class="row text-center">
@@ -117,18 +89,14 @@
 
   </main>
 
-  <!-- ============================================================
-       FOOTER
-       ============================================================ -->
+  <!-- Footer de la página -->
   <footer class="footer-custom">
     <div class="container">
       <p class="mb-0">&copy; 2026 Ensigna  - Proyecto Educativo de Ayudantía Web</p>
     </div>
   </footer>
 
-  <!-- ============================================================
-       SCRIPTS
-       ============================================================ -->
+  <!-- Scripts de Bootstrap y catálogo -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/js/utils.js"></script>
   <script src="/js/catalog.js"></script>

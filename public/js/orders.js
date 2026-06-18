@@ -1,25 +1,7 @@
-// ============================================================
-// ORDERS.JS - LÓGICA DE PEDIDOS DEL USUARIO
-// ============================================================
-// Maneja dos páginas:
-//   1. orders.html       → Lista de pedidos del usuario
-//   2. order-detail.html → Detalle de un pedido específico
-//
-// DEPENDE DE: utils.js (apiRequest, showAlert, formatCurrency,
-//             getQueryParam, getStatusBadgeClass, formatDate)
-//
-// ENDPOINTS USADOS:
-//   GET /api/pedidos?page=N      → lista paginada de pedidos
-//   GET /api/pedidos/:id         → detalle de un pedido
-//   PUT /api/pedidos/:id/cancelar → cancelar un pedido
-//
-// Referencia: Imagen 5 - Diagrama de estados de pedidos
-// ============================================================
+// orders.js - muestra pedidos del usuario y detalle de pedido.
 
 
-// ============================================================
-// INICIALIZACIÓN AL CARGAR LA PÁGINA
-// ============================================================
+// Inicia la página de pedidos y detecta la vista activa.
 document.addEventListener('DOMContentLoaded', async () => {
   // Verificar autenticación
   const user = await redirectIfNotAuth();
@@ -42,20 +24,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
-// ============================================================
-// VARIABLE: Página actual de pedidos
-// ============================================================
+// Página actual para paginación de pedidos.
 let ordersPage = 1;
 
 
-// ============================================================
-// FUNCIÓN: loadOrders() - CARGAR LISTA DE PEDIDOS
-// ============================================================
-// Obtiene todos los pedidos del usuario autenticado y los
-// muestra en una tabla con: ID, fecha, estado, total y acciones.
-//
-// Endpoint: GET /api/pedidos?page=N
-// ============================================================
+// Carga los pedidos del usuario y los muestra en tabla.
 async function loadOrders() {
   const tableBody = document.getElementById('orders-body');
   if (!tableBody) return;
@@ -150,15 +123,7 @@ async function loadOrders() {
 }
 
 
-// ============================================================
-// FUNCIÓN: loadOrderDetail() - CARGAR DETALLE DE UN PEDIDO
-// ============================================================
-// Obtiene toda la información de un pedido específico:
-// datos generales, lista de productos, estado y acciones.
-//
-// URL: /pages/order-detail.html?id=42
-// Endpoint: GET /api/pedidos/42
-// ============================================================
+// Carga el detalle de un pedido usando el id de la URL.
 async function loadOrderDetail() {
   const container = document.getElementById('order-detail');
   if (!container) return;
@@ -218,12 +183,7 @@ async function loadOrderDetail() {
 }
 
 
-// ============================================================
-// FUNCIÓN: renderOrderDetail() - RENDERIZAR DETALLE DEL PEDIDO
-// ============================================================
-// Genera el HTML completo de la página de detalle de pedido:
-// información general, tabla de productos y botones de acción.
-// ============================================================
+// Renderiza el detalle del pedido con información y productos.
 function renderOrderDetail(container, order) {
   // Obtener los detalles (productos) del pedido
   const details = order.detalles || order.productos || [];
@@ -321,14 +281,7 @@ function renderOrderDetail(container, order) {
 }
 
 
-// ============================================================
-// FUNCIÓN: cancelOrder() - CANCELAR UN PEDIDO
-// ============================================================
-// Cambia el estado del pedido a "Cancelado". Solo se permite
-// cancelar pedidos con estado "Pendiente".
-//
-// Endpoint: PUT /api/pedidos/:id/cancelar
-// ============================================================
+// Cancela un pedido pendiente.
 async function cancelOrder(orderId) {
   // Confirmar la cancelación con el usuario
   if (!confirm('¿Estás seguro de cancelar este pedido? Esta acción no se puede deshacer.')) {

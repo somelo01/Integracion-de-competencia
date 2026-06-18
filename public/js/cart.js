@@ -1,25 +1,7 @@
-// ============================================================
-// CART.JS - LÓGICA DEL CARRITO DE COMPRAS
-// ============================================================
-// Maneja la página cart.html: muestra los ítems del carrito,
-// permite modificar cantidades, eliminar ítems y proceder
-// al checkout.
-//
-// DEPENDE DE: utils.js (apiRequest, showAlert, formatCurrency, etc.)
-//
-// ENDPOINTS USADOS:
-//   GET    /api/carrito                  → obtener ítems del carrito
-//   PUT    /api/carrito/actualizar/:id   → cambiar cantidad de un ítem
-//   DELETE /api/carrito/eliminar/:id     → eliminar un ítem
-//   DELETE /api/carrito/vaciar           → vaciar todo el carrito
-//
-// Referencia: Imagen 4 - Diagrama del flujo de compra
-// ============================================================
+// cart.js - carrito de compras. Carga ítems, actualiza cantidades, elimina ítems y vacía el carrito.
 
 
-// ============================================================
-// INICIALIZACIÓN AL CARGAR LA PÁGINA
-// ============================================================
+// Inicia la página del carrito cuando el DOM está listo.
 document.addEventListener('DOMContentLoaded', async () => {
   // Verificar que el usuario esté autenticado
   // Si no lo está, redirectIfNotAuth() lo enviará al login
@@ -32,13 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Cargar los ítems del carrito
   loadCart();
 
-  // ---------------------------------------------------------
-  // EVENTO: Vaciar carrito completo
-  // ---------------------------------------------------------
-  // Se usa un modal de confirmación para evitar eliminaciones
-  // accidentales. El botón "Sí, vaciar" dentro del modal
-  // ejecuta la acción.
-  // ---------------------------------------------------------
+    // Evento para vaciar todo el carrito desde el modal de confirmación.
   const confirmEmptyBtn = document.getElementById('btn-confirm-empty');
   if (confirmEmptyBtn) {
     confirmEmptyBtn.addEventListener('click', emptyCart);
@@ -46,16 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
-// ============================================================
-// FUNCIÓN: loadCart() - CARGAR ÍTEMS DEL CARRITO
-// ============================================================
-// Obtiene todos los ítems del carrito del usuario actual y
-// renderiza la tabla con productos, cantidades y subtotales.
-//
-// Endpoint: GET /api/carrito
-// Respuesta esperada: { success: true, data: [{ id_detalle, id_producto,
-//   nombre, precio, cantidad, subtotal, imagen_url, ... }] }
-// ============================================================
+// Carga el carrito desde /api/carrito y muestra los ítems.
 async function loadCart() {
   const cartBody = document.getElementById('cart-body');
   const cartSummary = document.getElementById('cart-summary');
@@ -108,13 +75,7 @@ async function loadCart() {
 }
 
 
-// ============================================================
-// FUNCIÓN: renderCartItems() - RENDERIZAR FILAS DEL CARRITO
-// ============================================================
-// Genera el HTML de cada fila de la tabla del carrito.
-// Cada fila tiene: imagen, nombre, precio unitario, input de
-// cantidad, subtotal y botón eliminar.
-// ============================================================
+// Rinde las filas del carrito con imagen, nombre, precio, cantidad y subtotal.
 function renderCartItems(cartBody, items) {
   cartBody.innerHTML = items.map(item => {
     const idDetalle = item.id_detalle_carrito || item.id_detalle;
@@ -169,15 +130,7 @@ function renderCartItems(cartBody, items) {
 }
 
 
-// ============================================================
-// FUNCIÓN: updateQuantity() - ACTUALIZAR CANTIDAD DE UN ÍTEM
-// ============================================================
-// Se llama cuando el usuario cambia el valor del input de cantidad.
-// Envía la nueva cantidad al backend y actualiza el subtotal.
-//
-// Endpoint: PUT /api/carrito/actualizar/:idDetalle
-// Body: { cantidad: N }
-// ============================================================
+// Actualiza cantidad en el backend y recalcula el subtotal.
 async function updateQuantity(inputElement) {
   const idDetalle = inputElement.dataset.id;
   const nuevaCantidad = parseInt(inputElement.value);
@@ -217,14 +170,7 @@ async function updateQuantity(inputElement) {
 }
 
 
-// ============================================================
-// FUNCIÓN: removeItem() - ELIMINAR UN ÍTEM DEL CARRITO
-// ============================================================
-// Elimina un producto del carrito. Primero muestra una animación
-// de "salida" y luego hace la petición al backend.
-//
-// Endpoint: DELETE /api/carrito/eliminar/:idDetalle
-// ============================================================
+// Elimina un ítem del carrito con confirmación y petición al backend.
 async function removeItem(idDetalle) {
   // Confirmar eliminación
   if (!confirm('¿Estás seguro de eliminar este producto del carrito?')) return;
@@ -252,14 +198,7 @@ async function removeItem(idDetalle) {
 }
 
 
-// ============================================================
-// FUNCIÓN: emptyCart() - VACIAR TODO EL CARRITO
-// ============================================================
-// Elimina TODOS los ítems del carrito de una vez.
-// Se ejecuta desde el modal de confirmación.
-//
-// Endpoint: DELETE /api/carrito/vaciar
-// ============================================================
+// Vacia todo el carrito desde /api/carrito/vaciar.
 async function emptyCart() {
   try {
     const response = await apiRequest('/api/carrito/vaciar', 'DELETE');
@@ -282,12 +221,7 @@ async function emptyCart() {
 }
 
 
-// ============================================================
-// FUNCIÓN: updateCartTotal() - ACTUALIZAR TOTAL DEL CARRITO
-// ============================================================
-// Calcula el total sumando los subtotales de todos los ítems
-// y lo muestra en la sección de resumen.
-// ============================================================
+// Calcula y muestra el total del carrito.
 function updateCartTotal(items) {
   const totalElement = document.getElementById('cart-total');
   if (!totalElement) return;
@@ -300,12 +234,7 @@ function updateCartTotal(items) {
 }
 
 
-// ============================================================
-// FUNCIÓN: recalculateTotal() - RECALCULAR TOTAL DESDE EL DOM
-// ============================================================
-// Alternativa a updateCartTotal que lee los valores directamente
-// del DOM (útil cuando se actualiza una cantidad sin recargar).
-// ============================================================
+// Recalcula el total del carrito leyendo los valores del DOM.
 function recalculateTotal() {
   const totalElement = document.getElementById('cart-total');
   if (!totalElement) return;
@@ -323,12 +252,7 @@ function recalculateTotal() {
 }
 
 
-// ============================================================
-// FUNCIÓN: showEmptyCart() - MOSTRAR MENSAJE DE CARRITO VACÍO
-// ============================================================
-// Muestra un mensaje amigable cuando el carrito no tiene ítems,
-// con un link al catálogo para motivar la compra.
-// ============================================================
+// Muestra la vista de carrito vacío con enlace al catálogo.
 function showEmptyCart(cartBody, cartSummary, emptyCartDiv) {
   cartBody.innerHTML = '';
   if (cartSummary) cartSummary.style.display = 'none';

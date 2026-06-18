@@ -1,20 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       CATALOG.HTML - CATÁLOGO DE PRODUCTOS
-       ============================================================
-       Página principal del catálogo con:
-       - Barra de búsqueda con debounce
-       - Sidebar de filtros (categoría, precio, talla, color)
-       - Grid de productos con tarjetas clickeables
-       - Paginación
-       
-       NO REQUIERE AUTENTICACIÓN (cualquiera puede ver productos).
-       Para agregar al carrito SÍ necesita estar logueado.
-       
-       Referencia: Imagen 3 - Wireframe del catálogo
-       ============================================================ -->
+  <!-- Página de catálogo con búsqueda, filtros y paginación. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catálogo - Ensigna </title>
@@ -32,12 +19,7 @@
       <i class="bi bi-grid me-2"></i>Catálogo de Productos
     </h2>
 
-    <!-- ============================================================
-         BARRA DE BÚSQUEDA
-         ============================================================
-         Input de búsqueda con debounce (catalog.js).
-         Al escribir, busca productos después de 400ms sin teclear.
-         ============================================================ -->
+    <!-- Barra de búsqueda con debounce -->
     <div class="row mb-4">
       <div class="col-md-8 mx-auto">
         <div class="input-group">
@@ -55,17 +37,7 @@
 
 
     <div class="row">
-      <!-- ============================================================
-           SIDEBAR DE FILTROS (columna izquierda)
-           ============================================================
-           Controles para filtrar productos por:
-           - Categoría (select dinámico, se carga desde la API)
-           - Rango de precio (min - max)
-           - Talla (select estático)
-           - Color (select estático)
-           
-           Los filtros se aplican al hacer click en "Aplicar Filtros".
-           ============================================================ -->
+      <!-- Sidebar de filtros para el catálogo -->
       <div class="col-md-3 mb-4">
         <div class="filter-sidebar">
           <h5><i class="bi bi-funnel me-2"></i>Filtros</h5>
@@ -140,12 +112,7 @@
         </div>
       </div>
 
-      <!-- ============================================================
-           GRID DE PRODUCTOS (columna derecha)
-           ============================================================
-           Contenedor donde se renderizan las tarjetas de producto.
-           catalog.js detecta este div por su ID y carga los productos.
-           ============================================================ -->
+      <!-- Grid de productos renderizado por JS -->
       <div class="col-md-9">
         <!-- Grid de productos (se llena con JavaScript) -->
         <div class="row" id="product-grid">

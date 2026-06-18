@@ -1,64 +1,11 @@
-// ============================================================
-// CONTROLADOR: CARRITO DE COMPRAS (cartController.js)
-// ============================================================
-// Maneja todas las operaciones del carrito de compras:
-// ver contenido, agregar items, actualizar cantidades,
-// eliminar items y vaciar carrito.
-//
-// RELACIÓN CON DIAGRAMAS DEL PROYECTO:
-//   - Casos de Uso (imagen 2): "Agregar al Carrito", "Ver Carrito",
-//     "Modificar Cantidad", "Eliminar del Carrito"
-//   - ERD (imagen 4): Tablas "carrito_compras" (1:1 con usuarios)
-//     y "detalle_carrito" (N:M entre carrito y productos)
-//   - Diagrama de Secuencia (imagen 5): El carrito es el paso previo
-//     a la creación del pedido en el proceso de compra
-//   - Diagrama de Clases (imagen.png): Clase "Carrito_Compras"
-//     con relación a "Detalle_Carrito"
-//
-// ARQUITECTURA DE TABLAS:
-//   carrito_compras: Un registro por usuario (1:1)
-//     → Creado automáticamente al registrar el usuario (authController)
-//     → id_usuario es UNIQUE (un solo carrito por usuario)
-//
-//   detalle_carrito: Un registro por cada producto en el carrito
-//     → Relación con carrito_compras via id_carrito
-//     → Relación con gestion_productos via id_producto
-//     → UNIQUE(id_carrito, id_producto) evita duplicados
-//     → Si el producto ya está en el carrito, se suma la cantidad
-//
-// RELACIÓN CON OTROS ARCHIVOS:
-//   - routes/cartRoutes.js → URLs que llaman a estas funciones
-//   - controllers/authController.js → Crea el carrito al registrar
-//   - controllers/orderController.js → Usa el carrito para crear pedidos
-//   - middleware/auth.js → Todas las rutas requieren isAuthenticated
-//   - middleware/validators.js → validateCartItem valida id_producto y cantidad
-// ============================================================
+// Controlador carrito: gestiona ver, agregar, actualizar y vaciar carrito.
+// Todas las rutas usan isAuthenticated y validan ítems en middleware.
 
 const { pool } = require('../config/db');
 
-// ============================================================
-// VER CARRITO
-// ============================================================
-// Devuelve el contenido del carrito del usuario autenticado,
-// incluyendo detalles de cada producto (nombre, precio, imagen)
-// y cálculos de subtotales y total.
-//
-// CONSULTA CON JOIN:
-//   Necesitamos datos de 3 tablas:
-//   1. carrito_compras → Para obtener el id_carrito del usuario
-//   2. detalle_carrito → Para obtener los productos y cantidades
-//   3. gestion_productos → Para obtener nombre, precio, imagen
-//
-//   Se usan JOINs para combinar estas tablas en una sola consulta.
-//   Es más eficiente que hacer 3 consultas separadas.
-//
-// CÁLCULO DE SUBTOTAL:
-//   subtotal = precio × cantidad (calculado con SQL: p.precio * dc.cantidad)
-//   total = suma de todos los subtotales
-//
-// RUTA: GET /api/carrito
-// MIDDLEWARE: isAuthenticated
-// ============================================================
+// verCarrito: devuelve el carrito del usuario con sus subtotales y total.
+// Uso: GET /api/carrito
+// Middleware: isAuthenticated
 const verCarrito = async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -131,29 +78,9 @@ const verCarrito = async (req, res) => {
   }
 };
 
-// ============================================================
-// AGREGAR ITEM AL CARRITO
-// ============================================================
-// Agrega un producto al carrito o incrementa su cantidad si
-// ya existe.
-//
-// FLUJO:
-//   1. validateCartItem (middleware) ya validó id_producto y cantidad
-//   2. Verificar que el producto exista y esté activo
-//   3. Verificar que haya stock suficiente
-//   4. Obtener el carrito del usuario
-//   5. Si el producto ya está en el carrito → sumar cantidad
-//   6. Si no está → insertar nuevo registro en detalle_carrito
-//
-// TÉCNICA: INSERT ... ON DUPLICATE KEY UPDATE
-//   MySQL tiene esta cláusula que combina INSERT y UPDATE.
-//   Si el registro ya existe (violación de UNIQUE), ejecuta el UPDATE.
-//   Esto es más eficiente que hacer SELECT + IF + INSERT/UPDATE.
-//   Funciona gracias al UNIQUE(id_carrito, id_producto) en schema.sql.
-//
-// RUTA: POST /api/carrito/agregar
-// MIDDLEWARE: isAuthenticated + validateCartItem
-// ============================================================
+// agregarItem: añade un producto al carrito o actualiza su cantidad.
+// Uso: POST /api/carrito/agregar
+// Middleware: isAuthenticated + validateCartItem
 const agregarItem = async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -257,21 +184,9 @@ const agregarItem = async (req, res) => {
   }
 };
 
-// ============================================================
-// ACTUALIZAR CANTIDAD DE UN ITEM
-// ============================================================
-// Cambia la cantidad de un producto específico en el carrito.
-// A diferencia de agregar (que suma), esto ESTABLECE la cantidad.
-//
-// VALIDACIONES:
-//   1. El item debe pertenecer al carrito del usuario actual
-//      (previene que un usuario modifique el carrito de otro)
-//   2. La nueva cantidad debe tener stock suficiente
-//   3. La cantidad debe ser mayor a 0
-//
-// RUTA: PUT /api/carrito/actualizar/:idDetalle
-// MIDDLEWARE: isAuthenticated
-// ============================================================
+// actualizarCantidad: ajusta la cantidad de un item en el carrito.
+// Uso: PUT /api/carrito/actualizar/:idDetalle
+// Middleware: isAuthenticated
 const actualizarCantidad = async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -350,15 +265,9 @@ const actualizarCantidad = async (req, res) => {
   }
 };
 
-// ============================================================
-// ELIMINAR UN ITEM DEL CARRITO
-// ============================================================
-// Remueve un producto específico del carrito.
-// Se verifica la propiedad del item antes de eliminar.
-//
-// RUTA: DELETE /api/carrito/eliminar/:idDetalle
-// MIDDLEWARE: isAuthenticated
-// ============================================================
+// eliminarItem: borra un item del carrito del usuario.
+// Uso: DELETE /api/carrito/eliminar/:idDetalle
+// Middleware: isAuthenticated
 const eliminarItem = async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -406,20 +315,10 @@ const eliminarItem = async (req, res) => {
   }
 };
 
-// ============================================================
 // VACIAR CARRITO
-// ============================================================
-// Elimina TODOS los productos del carrito del usuario.
-// El carrito en sí (tabla carrito_compras) permanece, solo
-// se borran los registros de detalle_carrito.
-//
-// NOTA: Esto también se ejecuta internamente al crear un pedido
-// (orderController.crearPedido), pero aquí es para cuando el
-// usuario quiere vaciar su carrito manualmente.
-//
+// Elimina todos los items del carrito del usuario.
 // RUTA: DELETE /api/carrito/vaciar
 // MIDDLEWARE: isAuthenticated
-// ============================================================
 const vaciarCarrito = async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -465,9 +364,7 @@ const vaciarCarrito = async (req, res) => {
   }
 };
 
-// ============================================================
-// EXPORTAR CONTROLADORES
-// ============================================================
+// Exportar controladores
 module.exports = {
   verCarrito,
   agregarItem,

@@ -10,34 +10,7 @@
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-  <!-- ============================================================
-       PÁGINA: PAGO FALLIDO / CANCELADO
-       ============================================================
-       Esta página se muestra cuando Webpay Plus rechaza o el
-       usuario cancela el pago. El paymentController.js redirige
-       aquí con: res.redirect('/pago-fallido')
-       
-       Corresponde al flujo "Pago rechazado" del Diagrama de
-       Secuencia del Proceso de Compra (imagen 5):
-         "Mostrar error de pago" → Se muestra esta página
-       
-       IMPORTANTE: Cuando el pago es rechazado, el backend ya
-       restauró el stock de los productos (ver paymentController.js).
-       El pedido queda en estado 'Rechazado' en la BD.
-       
-       FLUJO DE RECHAZO:
-         1. paymentController.confirmarPago() recibe callback
-         2. response_code !== 0 → Pago rechazado
-         3. Actualiza pago a 'Rechazado' y pedido a 'Rechazado'
-         4. Restaura stock de cada producto del pedido
-         5. Redirige aquí
-       
-       FLUJO DE CANCELACIÓN:
-         1. Usuario presiona "Anular" en el formulario de Webpay
-         2. Webpay redirige sin token_ws pero con TBK_TOKEN
-         3. paymentController marca pago como 'Cancelado'
-         4. Redirige aquí
-       ============================================================ -->
+  <!-- Página de pago fallido/cancelado luego de Webpay. -->
 
   <!-- Navbar -->
   <div id="navbar-container"></div>

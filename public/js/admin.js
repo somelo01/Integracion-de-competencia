@@ -1,34 +1,7 @@
-// ============================================================
-// ADMIN.JS - LÓGICA DEL PANEL DE ADMINISTRACIÓN
-// ============================================================
-// Maneja todas las páginas del panel admin:
-//   1. admin/dashboard.html  → Estadísticas generales
-//   2. admin/products.html   → CRUD de productos
-//   3. admin/users.html      → Gestión de usuarios
-//   4. admin/orders.html     → Gestión de pedidos
-//   5. admin/support.html    → Gestión de tickets de soporte
-//
-// DEPENDE DE: utils.js
-//
-// ENDPOINTS USADOS (todos bajo /api/admin/):
-//   GET  /api/admin/dashboard        → estadísticas
-//   CRUD /api/admin/productos        → gestión de productos
-//   CRUD /api/admin/usuarios         → gestión de usuarios
-//   CRUD /api/admin/pedidos          → gestión de pedidos
-//   CRUD /api/admin/soporte          → gestión de tickets
-//
-// SEGURIDAD:
-// Todas las páginas admin verifican que el usuario tenga rol
-// "Admin" antes de mostrar contenido. Si no es admin,
-// redirectIfNotAdmin() lo envía al catálogo.
-//
-// Referencia: Imagen 8 - Diagrama del panel de administración
-// ============================================================
+// admin.js - panel de administración.
+// Maneja dashboard, productos, usuarios, pedidos y soporte.
+// Usa utils.js y llamadas a /api/admin/*.
 
-
-// ============================================================
-// INICIALIZACIÓN AL CARGAR LA PÁGINA
-// ============================================================
 document.addEventListener('DOMContentLoaded', async () => {
   // Verificar que sea admin
   const user = await redirectIfNotAdmin();
@@ -46,20 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
-// ============================================================
-//                    1. DASHBOARD
-// ============================================================
-
-
-// ============================================================
-// FUNCIÓN: initDashboard() - INICIALIZAR DASHBOARD
-// ============================================================
-// Carga las estadísticas del panel y las muestra en tarjetas.
-//
-// Endpoint: GET /api/admin/dashboard
-// Respuesta: { totalProductos, totalPedidos, totalTickets,
-//              totalUsuarios, pedidosPendientes, ticketsAbiertos }
-// ============================================================
+// Dashboard: cargar estadísticas.
 async function initDashboard() {
   try {
     const response = await apiRequest('/api/admin/dashboard');
@@ -83,11 +43,7 @@ async function initDashboard() {
 }
 
 
-// ============================================================
-// FUNCIÓN: updateStatCard() - ACTUALIZAR TARJETA DE ESTADÍSTICA
-// ============================================================
-// Busca el elemento por ID y actualiza su contenido numérico.
-// ============================================================
+// Actualiza el texto de una tarjeta estadística por su ID.
 function updateStatCard(elementId, value) {
   const element = document.getElementById(elementId);
   if (element) {
@@ -96,17 +52,9 @@ function updateStatCard(elementId, value) {
 }
 
 
-// ============================================================
-//                    2. PRODUCTOS ADMIN
-// ============================================================
+// Productos admin.
 
-
-// ============================================================
-// FUNCIÓN: initAdminProducts() - INICIALIZAR GESTIÓN DE PRODUCTOS
-// ============================================================
-// Carga la tabla de productos y configura los eventos para
-// crear, editar y eliminar productos.
-// ============================================================
+// Inicia la sección de productos y enlaza el formulario.
 async function initAdminProducts() {
   // Cargar tabla de productos
   loadAdminProducts();
@@ -119,11 +67,7 @@ async function initAdminProducts() {
 }
 
 
-// ============================================================
-// FUNCIÓN: loadAdminProducts() - CARGAR TABLA DE PRODUCTOS
-// ============================================================
-// Endpoint: GET /api/admin/productos
-// ============================================================
+// Carga la lista de productos desde /api/admin/productos.
 async function loadAdminProducts() {
   const tableBody = document.getElementById('products-body');
   if (!tableBody) return;
@@ -196,11 +140,7 @@ async function loadAdminProducts() {
 }
 
 
-// ============================================================
-// FUNCIÓN: openCreateProductModal() - ABRIR MODAL PARA CREAR
-// ============================================================
-// Limpia el formulario y abre el modal en modo "crear".
-// ============================================================
+// Abre el modal para crear un producto.
 function openCreateProductModal() {
   const form = document.getElementById('product-form');
   if (form) form.reset();
@@ -219,13 +159,7 @@ function openCreateProductModal() {
 }
 
 
-// ============================================================
-// FUNCIÓN: editProduct() - CARGAR DATOS PARA EDITAR
-// ============================================================
-// Carga los datos de un producto en el modal para editarlo.
-//
-// Endpoint: GET /api/admin/productos (ya los tenemos) o GET /api/productos/:id
-// ============================================================
+// Carga un producto y abre el modal de edición.
 async function editProduct(productId) {
   try {
     const response = await apiRequest(`/api/productos/${productId}`);
@@ -260,16 +194,7 @@ async function editProduct(productId) {
 }
 
 
-// ============================================================
-// FUNCIÓN: saveProduct() - GUARDAR PRODUCTO (CREAR O EDITAR)
-// ============================================================
-// Si el campo oculto product-id tiene valor, es edición (PUT).
-// Si está vacío, es creación (POST).
-//
-// Endpoints:
-//   POST /api/admin/productos     → crear nuevo
-//   PUT  /api/admin/productos/:id → actualizar existente
-// ============================================================
+// Guarda un producto: crea o actualiza según el ID oculto.
 async function saveProduct(event) {
   event.preventDefault();
 
@@ -342,11 +267,7 @@ async function saveProduct(event) {
 }
 
 
-// ============================================================
-// FUNCIÓN: deleteProduct() - ELIMINAR PRODUCTO
-// ============================================================
-// Endpoint: DELETE /api/admin/productos/:id
-// ============================================================
+// Elimina un producto desde el admin.
 async function deleteProduct(productId) {
   if (!confirm('¿Estás seguro de eliminar este producto? Esta acción no se puede deshacer.')) {
     return;
@@ -367,24 +288,16 @@ async function deleteProduct(productId) {
 }
 
 
-// ============================================================
-//                    3. USUARIOS ADMIN
-// ============================================================
+// Sección de usuarios admin.
 
 
-// ============================================================
-// FUNCIÓN: initAdminUsers() - INICIALIZAR GESTIÓN DE USUARIOS
-// ============================================================
+// Inicia la gestión de usuarios en el admin.
 async function initAdminUsers() {
   loadAdminUsers();
 }
 
 
-// ============================================================
-// FUNCIÓN: loadAdminUsers() - CARGAR TABLA DE USUARIOS
-// ============================================================
-// Endpoint: GET /api/admin/usuarios
-// ============================================================
+// Carga usuarios desde /api/admin/usuarios.
 async function loadAdminUsers() {
   const tableBody = document.getElementById('users-body');
   if (!tableBody) return;
@@ -448,11 +361,7 @@ async function loadAdminUsers() {
 }
 
 
-// ============================================================
-// FUNCIÓN: deleteUser() - ELIMINAR USUARIO
-// ============================================================
-// Endpoint: DELETE /api/admin/usuarios/:id
-// ============================================================
+// Elimina un usuario admin.
 async function deleteUser(userId) {
   if (!confirm('¿Estás seguro de eliminar este usuario? Se eliminarán también sus pedidos y datos.')) {
     return;
@@ -473,14 +382,10 @@ async function deleteUser(userId) {
 }
 
 
-// ============================================================
-//                    4. PEDIDOS ADMIN
-// ============================================================
+// Sección de pedidos admin.
 
 
-// ============================================================
-// FUNCIÓN: initAdminOrders() - INICIALIZAR GESTIÓN DE PEDIDOS
-// ============================================================
+// Inicia la gestión de pedidos admin.
 async function initAdminOrders() {
   loadAdminOrders();
 
@@ -494,11 +399,7 @@ async function initAdminOrders() {
 }
 
 
-// ============================================================
-// FUNCIÓN: loadAdminOrders() - CARGAR TABLA DE PEDIDOS
-// ============================================================
-// Endpoint: GET /api/admin/pedidos
-// ============================================================
+// Carga pedidos admin desde /api/admin/pedidos.
 async function loadAdminOrders(statusFilter = '') {
   const tableBody = document.getElementById('admin-orders-body');
   if (!tableBody) return;
@@ -579,12 +480,7 @@ async function loadAdminOrders(statusFilter = '') {
 }
 
 
-// ============================================================
-// FUNCIÓN: updateOrderStatus() - CAMBIAR ESTADO DE PEDIDO
-// ============================================================
-// Endpoint: PUT /api/admin/pedidos/:id
-// Body: { estado: 'NuevoEstado' }
-// ============================================================
+// Cambia el estado de un pedido admin.
 async function updateOrderStatus(orderId, newStatus) {
   if (!newStatus) return;
 
@@ -612,14 +508,10 @@ async function updateOrderStatus(orderId, newStatus) {
 }
 
 
-// ============================================================
-//                    5. SOPORTE ADMIN
-// ============================================================
+// Sección de soporte admin.
 
 
-// ============================================================
-// FUNCIÓN: initAdminSupport() - INICIALIZAR GESTIÓN DE TICKETS
-// ============================================================
+// Inicia la gestión de soporte admin.
 async function initAdminSupport() {
   loadAdminTickets();
 
@@ -631,11 +523,7 @@ async function initAdminSupport() {
 }
 
 
-// ============================================================
-// FUNCIÓN: loadAdminTickets() - CARGAR TABLA DE TICKETS
-// ============================================================
-// Endpoint: GET /api/admin/soporte
-// ============================================================
+// Carga tickets admin desde /api/admin/soporte.
 async function loadAdminTickets() {
   const tableBody = document.getElementById('admin-tickets-body');
   if (!tableBody) return;
@@ -709,12 +597,7 @@ async function loadAdminTickets() {
 }
 
 
-// ============================================================
-// FUNCIÓN: openRespondModal() - ABRIR MODAL DE RESPUESTA
-// ============================================================
-// Abre el modal con un textarea para que el admin responda
-// al ticket seleccionado.
-// ============================================================
+// Abre el modal para responder un ticket.
 function openRespondModal(ticketId, asunto) {
   document.getElementById('respond-ticket-id').value = ticketId;
   document.getElementById('respond-ticket-asunto').textContent = `Ticket #${ticketId}: ${asunto}`;
@@ -725,12 +608,7 @@ function openRespondModal(ticketId, asunto) {
 }
 
 
-// ============================================================
-// FUNCIÓN: respondToTicket() - ENVIAR RESPUESTA AL TICKET
-// ============================================================
-// Endpoint: PUT /api/admin/soporte/:id
-// Body: { respuesta_admin: '...', estado: 'En Proceso' }
-// ============================================================
+// Envía la respuesta del admin al ticket.
 async function respondToTicket(event) {
   event.preventDefault();
 
@@ -770,12 +648,7 @@ async function respondToTicket(event) {
 }
 
 
-// ============================================================
-// FUNCIÓN: approveRefund() - APROBAR REEMBOLSO
-// ============================================================
-// Marca un ticket de reembolso como resuelto.
-// Endpoint: PUT /api/admin/soporte/:id
-// ============================================================
+// Aprueba el reembolso y cierra el ticket.
 async function approveRefund(ticketId) {
   if (!confirm('¿Aprobar este reembolso? El ticket se marcará como Resuelto.')) {
     return;

@@ -1,30 +1,7 @@
-// ============================================================
-// MIDDLEWARE: VALIDACIONES Y REGEX
-// ============================================================
-// Este archivo centraliza TODAS las validaciones del sistema.
-// Los regex (expresiones regulares) definen los patrones que
-// deben cumplir los datos de entrada del usuario.
-//
-// ¿POR QUÉ VALIDAR EN EL BACKEND?
-// Aunque el frontend también valida (para mejor UX), la
-// validación del backend es la que REALMENTE protege el sistema.
-// Un atacante puede saltarse la validación del frontend
-// fácilmente (usando Postman, curl, o desactivando JavaScript).
-//
-// CÓMO SE USA EN LAS RUTAS:
-//   const { validateRegister, validateProduct } = require('../middleware/validators');
-//   router.post('/registro', validateRegister, authController.registrar);
-//   // validateRegister se ejecuta ANTES del controlador.
-//   // Si la validación falla, responde con 400 y NO llega al controlador.
-//   // Si pasa, llama a next() y continúa al controlador.
-// ============================================================
+// Validaciones del backend y patrones REGEX compartidos.
+// Esto protege el sistema incluso si el frontend se salta la validación.
 
-// ============================================================
-// PATRONES REGEX
-// ============================================================
-// Cada regex define qué formato es válido para cada campo.
-// Se exportan para reutilizarlos en el frontend (utils.js).
-// ============================================================
+// Patrones REGEX para campos de formulario. Se usan aquí y se pueden reutilizar en frontend.
 
 const REGEX = {
   // Email: formato estándar (usuario@dominio.extension)
@@ -64,17 +41,8 @@ const REGEX = {
 };
 
 
-// ============================================================
-// FUNCIÓN: sanitizeInput
-// ============================================================
-// Limpia un string de caracteres peligrosos para prevenir XSS
-// (Cross-Site Scripting). Convierte caracteres HTML especiales
-// en sus entidades seguras.
-//
-// Ejemplo:
-//   sanitizeInput('<script>alert("xss")</script>')
-//   → '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;'
-// ============================================================
+// sanitizeInput: limpia texto para evitar XSS.
+// Convierte caracteres especiales en entidades HTML seguras.
 function sanitizeInput(str) {
   if (typeof str !== 'string') return str;
   return str
@@ -86,13 +54,7 @@ function sanitizeInput(str) {
 }
 
 
-// ============================================================
-// FUNCIÓN HELPER: buildErrorResponse
-// ============================================================
-// Construye un objeto de error con formato consistente.
-// Todas las respuestas de error del sistema siguen este formato
-// para que el frontend siempre sepa cómo interpretar los errores.
-// ============================================================
+// buildErrorResponse: formatea errores de validación para la respuesta API.
 function buildErrorResponse(errors) {
   return {
     success: false,
@@ -103,17 +65,8 @@ function buildErrorResponse(errors) {
 }
 
 
-// ============================================================
-// MIDDLEWARE: validateRegister
-// ============================================================
-// Valida los datos del formulario de registro de usuario.
-// Se usa en: routes/authRoutes.js → POST /api/auth/registro
-//
-// Campos requeridos:
-//   - email: formato email válido
-//   - nombre: solo letras y espacios, 2-100 chars
-//   - contrasena: mínimo 8 chars con mayúscula, minúscula, número, especial
-// ============================================================
+// validateRegister: valida los datos de registro.
+// Uso: POST /api/auth/registro
 function validateRegister(req, res, next) {
   const { email, nombre, contrasena } = req.body;
   const errors = [];
@@ -154,12 +107,8 @@ function validateRegister(req, res, next) {
 }
 
 
-// ============================================================
-// MIDDLEWARE: validateLogin
-// ============================================================
-// Valida los datos del formulario de inicio de sesión.
-// Se usa en: routes/authRoutes.js → POST /api/auth/login
-// ============================================================
+// validateLogin: valida inicio de sesión.
+// Uso: POST /api/auth/login
 function validateLogin(req, res, next) {
   const { email, contrasena } = req.body;
   const errors = [];
@@ -183,12 +132,7 @@ function validateLogin(req, res, next) {
 }
 
 
-// ============================================================
-// MIDDLEWARE: validateProduct
-// ============================================================
-// Valida los datos al crear o editar un producto (panel admin).
-// Se usa en: routes/adminRoutes.js → POST/PUT /api/admin/productos
-// ============================================================
+// validateProduct: valida producto en admin.
 function validateProduct(req, res, next) {
   const { nombre, categoria, precio, stock } = req.body;
   const errors = [];
@@ -230,12 +174,7 @@ function validateProduct(req, res, next) {
 }
 
 
-// ============================================================
-// MIDDLEWARE: validateCartItem
-// ============================================================
-// Valida los datos al agregar un producto al carrito.
-// Se usa en: routes/cartRoutes.js → POST /api/carrito/agregar
-// ============================================================
+// validateCartItem: valida ítem agregado al carrito.
 function validateCartItem(req, res, next) {
   const { id_producto, cantidad } = req.body;
   const errors = [];
@@ -260,12 +199,8 @@ function validateCartItem(req, res, next) {
 }
 
 
-// ============================================================
-// MIDDLEWARE: validateTicket
-// ============================================================
-// Valida los datos al crear un ticket de soporte.
-// Se usa en: routes/supportRoutes.js → POST /api/soporte/crear
-// ============================================================
+// validateTicket: valida ticket de soporte.
+// Uso: POST /api/soporte/crear
 function validateTicket(req, res, next) {
   const { asunto, tipo, comentarios } = req.body;
   const errors = [];
@@ -300,13 +235,7 @@ function validateTicket(req, res, next) {
 }
 
 
-// ============================================================
-// MIDDLEWARE: validateId
-// ============================================================
-// Valida que el parámetro :id de la URL sea un entero positivo.
-// Se usa como middleware en cualquier ruta con :id
-// Ejemplo: router.get('/:id', validateId, controller.getById);
-// ============================================================
+// validateId: valida que :id sea un entero positivo.
 function validateId(req, res, next) {
   const id = req.params.id || req.params.idDetalle || req.params.idPago;
   if (!id || !REGEX.ID.test(id)) {
@@ -321,9 +250,7 @@ function validateId(req, res, next) {
 }
 
 
-// ============================================================
-// EXPORTAR todo lo que necesitan los demás archivos
-// ============================================================
+// Exportaciones públicas del middleware
 module.exports = {
   REGEX,                 // Para reutilizar los patrones en el frontend
   sanitizeInput,

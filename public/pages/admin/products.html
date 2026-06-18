@@ -1,23 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       ADMIN/PRODUCTS.HTML - GESTIÓN DE PRODUCTOS (CRUD)
-       ============================================================
-       Tabla CRUD completa para administrar productos:
-       - Ver todos los productos con sus datos
-       - Crear nuevos productos (modal)
-       - Editar productos existentes (modal)
-       - Eliminar productos
-       
-       REQUIERE ROL ADMIN.
-       
-       Endpoints:
-         GET    /api/admin/productos     → listar
-         POST   /api/admin/productos     → crear
-         PUT    /api/admin/productos/:id → editar
-         DELETE /api/admin/productos/:id → eliminar
-       ============================================================ -->
+  <!-- Página admin de productos con CRUD y modal de edición. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Productos - Admin</title>
@@ -55,13 +39,7 @@
     <!-- Contenedor de alertas -->
     <div id="products-alerts"></div>
 
-    <!-- ============================================================
-         TABLA DE PRODUCTOS
-         ============================================================
-         Tabla con datos de todos los productos del sistema.
-         Columnas: ID, Nombre/Categoría, Precio, Stock, Estado,
-         Talla y Acciones (editar, eliminar).
-         ============================================================ -->
+    <!-- Tabla de productos cargada por admin.js -->
     <div class="table-responsive">
       <table class="table table-hover table-admin align-middle">
         <thead class="table-dark">
@@ -82,17 +60,7 @@
     </div>
   </main>
 
-  <!-- ============================================================
-       MODAL: Crear/Editar Producto
-       ============================================================
-       Modal reutilizable para crear y editar productos.
-       Si product-id tiene valor → modo edición (PUT)
-       Si product-id está vacío → modo creación (POST)
-       
-       Los campos coinciden con los que espera el backend:
-       nombre, categoria, precio, stock, descripcion, imagen_url,
-       talla, color.
-       ============================================================ -->
+  <!-- Modal para crear o editar productos. -->
   <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">

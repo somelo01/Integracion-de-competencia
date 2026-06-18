@@ -1,23 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       ADMIN/SUPPORT.HTML - GESTIÓN DE TICKETS DE SOPORTE
-       ============================================================
-       Tabla con todos los tickets de soporte del sistema.
-       El admin puede:
-       - Ver todos los tickets con su tipo y estado
-       - Responder a tickets (modal con textarea)
-       - Aprobar reembolsos (marca como Resuelto)
-       
-       REQUIERE ROL ADMIN.
-       
-       Endpoints:
-         GET /api/admin/soporte       → listar todos los tickets
-         PUT /api/admin/soporte/:id   → responder/actualizar ticket
-       
-       Referencia: Imagen 7 - Diagrama del sistema de soporte
-       ============================================================ -->
+  <!-- Admin soporte: lista tickets y responde desde modal. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestión de Soporte - Admin</title>
@@ -49,14 +33,7 @@
     <!-- Contenedor de alertas -->
     <div id="admin-support-alerts"></div>
 
-    <!-- ============================================================
-         TABLA DE TICKETS
-         ============================================================
-         Muestra todos los tickets con:
-         - ID, usuario, asunto, tipo, estado, fecha
-         - Botón responder (abre modal)
-         - Botón aprobar reembolso (solo para tickets tipo Reembolso)
-         ============================================================ -->
+    <!-- Tabla de tickets cargada por admin.js -->
     <div class="table-responsive">
       <table class="table table-hover table-admin align-middle">
         <thead class="table-dark">
@@ -77,15 +54,7 @@
     </div>
   </main>
 
-  <!-- ============================================================
-       MODAL: Responder a un ticket
-       ============================================================
-       Modal con textarea para que el admin escriba su respuesta
-       al ticket seleccionado. También permite cambiar el estado.
-       
-       El ID del ticket se guarda en un campo oculto para
-       identificar a cuál ticket se está respondiendo.
-       ============================================================ -->
+  <!-- Modal de respuesta a ticket admin -->
   <div class="modal fade" id="respondModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">

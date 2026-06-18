@@ -1,20 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================================
-       ORDER-DETAIL.HTML - DETALLE DE UN PEDIDO
-       ============================================================
-       Muestra toda la información de un pedido específico:
-       - Datos generales (fecha, estado, total)
-       - Tabla de productos comprados
-       - Botón cancelar (si está Pendiente)
-       - Botón solicitar reembolso (si está Pagado/Enviado/Entregado)
-       
-       Lee el ID del pedido desde la URL: ?id=42
-       Endpoint: GET /api/pedidos/42
-       
-       REQUIERE AUTENTICACIÓN.
-       ============================================================ -->
+  <!-- Página de detalle de pedido. Carga el pedido según ?id. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalle del Pedido - Ensigna </title>
@@ -27,13 +14,7 @@
   <div id="navbar-container"></div>
 
   <main class="container py-4">
-    <!-- ============================================================
-         DETALLE DEL PEDIDO
-         ============================================================
-         Este div se llena completamente con JavaScript (orders.js).
-         La función loadOrderDetail() lee el ?id= de la URL,
-         hace GET /api/pedidos/:id y renderiza todo el contenido.
-         ============================================================ -->
+    <!-- Contenedor de detalle de pedido cargado por JS -->
     <div id="order-detail">
       <div class="text-center py-5">
         <div class="spinner-border text-primary" role="status">

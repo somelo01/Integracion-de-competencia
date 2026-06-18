@@ -1,33 +1,9 @@
-// ============================================================
-// AUTH.JS - LÓGICA DE AUTENTICACIÓN DEL FRONTEND
-// ============================================================
-// Maneja los formularios de: Login, Registro, Recuperar Contraseña
-// y Editar Perfil.
-//
-// DEPENDE DE: utils.js (debe cargarse antes que este archivo)
-//   - REGEX: patrones de validación
-//   - apiRequest(): peticiones HTTP
-//   - showAlert(): alertas Bootstrap
-//   - validateField(): validación en tiempo real
-//   - setButtonLoading() / resetButton(): estados de botón
-//
-// ¿CÓMO FUNCIONA LA AUTENTICACIÓN?
-// 1. El usuario envía email + contraseña al backend
-// 2. El backend verifica los datos y crea una SESIÓN
-// 3. El backend envía una cookie (connect.sid) al navegador
-// 4. En cada petición posterior, el navegador envía esa cookie
-// 5. El backend usa la cookie para saber quién es el usuario
-//
-// Referencia: Imagen 2 - Diagrama de flujo de autenticación
-// ============================================================
+// auth.js - autenticación del frontend.
+// Maneja login, registro, recuperación de contraseña y edición de perfil.
+// Usa utils.js para validación, peticiones y alertas.
 
 
-// ============================================================
-// INICIALIZACIÓN AL CARGAR LA PÁGINA
-// ============================================================
-// Se ejecuta cuando el DOM está listo. Detecta en qué página
-// estamos y activa los formularios correspondientes.
-// ============================================================
+// Detecta la página cargada y activa el formulario correspondiente.
 document.addEventListener('DOMContentLoaded', () => {
   // Detectar qué formulario existe en la página actual
   const loginForm = document.getElementById('login-form');
@@ -43,41 +19,21 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// ============================================================
-// FUNCIÓN: initLogin() - INICIALIZAR FORMULARIO DE LOGIN
-// ============================================================
-// Configura la validación en tiempo real y el envío del
-// formulario de inicio de sesión.
-//
-// Endpoint: POST /api/auth/login
-// Body: { email, contrasena }
-// Éxito: Redirige al catálogo
-// Error: Muestra mensaje de error
-// ============================================================
+// Inicia el formulario de login.
 function initLogin(form) {
   const emailInput = document.getElementById('login-email');
   const passwordInput = document.getElementById('login-password');
 
-  // ---------------------------------------------------------
-  // VALIDACIÓN EN TIEMPO REAL
-  // ---------------------------------------------------------
-  // Escuchamos el evento 'input' que se dispara cada vez que
-  // el usuario escribe o borra un carácter.
-  // Esto da feedback inmediato (borde verde o rojo).
-  // ---------------------------------------------------------
+  // Validación en tiempo real del email.
   if (emailInput) {
     emailInput.addEventListener('input', () => {
       validateField(emailInput, REGEX.EMAIL, 'Formato de email inválido. Ej: usuario@correo.com');
     });
   }
 
-  // Para el login, la contraseña no necesita validación de formato
-  // (no queremos revelar las reglas de seguridad a un atacante),
+  // Para el login, la contraseña solo debe existir.
   // solo verificamos que no esté vacío.
 
-  // ---------------------------------------------------------
-  // ENVÍO DEL FORMULARIO
-  // ---------------------------------------------------------
   form.addEventListener('submit', async (event) => {
     // Prevenir el comportamiento default del formulario (recargar la página)
     event.preventDefault();
@@ -128,26 +84,14 @@ function initLogin(form) {
 }
 
 
-// ============================================================
-// FUNCIÓN: initRegister() - INICIALIZAR FORMULARIO DE REGISTRO
-// ============================================================
-// Configura validación en tiempo real, indicador de fortaleza
-// de contraseña y envío del formulario de registro.
-//
-// Endpoint: POST /api/auth/registro
-// Body: { email, nombre, contrasena }
-// Éxito: Redirige al login con mensaje de éxito
-// Error: Muestra errores de validación
-// ============================================================
+// Inicializa el registro y maneja su envío.
 function initRegister(form) {
   const emailInput = document.getElementById('register-email');
   const nameInput = document.getElementById('register-name');
   const passwordInput = document.getElementById('register-password');
   const confirmPasswordInput = document.getElementById('register-confirm-password');
 
-  // ---------------------------------------------------------
-  // VALIDACIÓN EN TIEMPO REAL DE CADA CAMPO
-  // ---------------------------------------------------------
+  // Validación en tiempo real de cada campo.
   if (emailInput) {
     emailInput.addEventListener('input', () => {
       validateField(emailInput, REGEX.EMAIL, 'Formato de email inválido. Ej: usuario@correo.com');
@@ -179,9 +123,7 @@ function initRegister(form) {
     });
   }
 
-  // ---------------------------------------------------------
-  // ENVÍO DEL FORMULARIO DE REGISTRO
-  // ---------------------------------------------------------
+  // Envío del registro
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -250,16 +192,7 @@ function initRegister(form) {
 }
 
 
-// ============================================================
-// FUNCIÓN: initRecover() - INICIALIZAR RECUPERACIÓN DE CONTRASEÑA
-// ============================================================
-// Formulario simple: el usuario ingresa su email y el backend
-// envía un enlace de recuperación (en un proyecto real, enviaría
-// un correo electrónico).
-//
-// Endpoint: POST /api/auth/recuperar
-// Body: { email }
-// ============================================================
+// Inicializa la recuperación de contraseña.
 function initRecover(form) {
   const emailInput = document.getElementById('recover-email');
 
@@ -304,17 +237,7 @@ function initRecover(form) {
 }
 
 
-// ============================================================
-// FUNCIÓN: initProfile() - INICIALIZAR EDICIÓN DE PERFIL
-// ============================================================
-// Carga los datos del usuario actual y permite editarlos.
-// El usuario puede cambiar su nombre y/o contraseña.
-//
-// Endpoints:
-//   GET /api/auth/perfil → cargar datos actuales
-//   PUT /api/auth/perfil → guardar cambios
-// Body: { nombre, contrasena_actual, contrasena_nueva }
-// ============================================================
+// Carga perfil de usuario y guarda cambios.
 async function initProfile(form) {
   const nameInput = document.getElementById('profile-name');
   const emailDisplay = document.getElementById('profile-email');
@@ -408,19 +331,7 @@ async function initProfile(form) {
 }
 
 
-// ============================================================
-// FUNCIÓN: updatePasswordStrength() - INDICADOR DE FORTALEZA
-// ============================================================
-// Analiza la contraseña y actualiza visualmente la barra de
-// fortaleza. Evalúa 4 criterios:
-// 1. Longitud >= 8
-// 2. Tiene mayúsculas y minúsculas
-// 3. Tiene números
-// 4. Tiene caracteres especiales
-//
-// La barra se colorea según el puntaje:
-// 0-1: Débil (rojo), 2: Regular (naranja), 3: Buena (amarillo), 4: Fuerte (verde)
-// ============================================================
+// Actualiza el indicador de fortaleza de la contraseña.
 function updatePasswordStrength(password) {
   const strengthBar = document.querySelector('.password-strength-bar');
   const strengthText = document.querySelector('.password-strength-text');
@@ -452,12 +363,7 @@ function updatePasswordStrength(password) {
 }
 
 
-// ============================================================
-// FUNCIÓN: validatePasswordMatch() - VERIFICAR COINCIDENCIA
-// ============================================================
-// Compara la contraseña con su confirmación y actualiza el
-// feedback visual. Se usa en el registro y cambio de contraseña.
-// ============================================================
+// Verifica si la contraseña y su confirmación coinciden.
 function validatePasswordMatch(passwordInput, confirmInput) {
   const messageDiv = confirmInput.parentElement.querySelector('.validation-message');
 
