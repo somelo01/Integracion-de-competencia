@@ -1,21 +1,5 @@
-// ============================================================
-// RUTAS: PEDIDOS (orderRoutes.js)
-// ============================================================
-// Define las rutas para la gestión de pedidos del cliente.
-// TODAS las rutas requieren autenticación (isAuthenticated).
-//
-// RELACIÓN CON OTROS ARCHIVOS:
-//   - controllers/orderController.js → Lógica de cada operación
-//   - middleware/auth.js → isAuthenticated protege todas las rutas
-//   - middleware/validators.js → validateId para parámetro :id
-//   - app.js → Monta este router en /api/pedidos
-//
-// CORRESPONDENCIA CON DIAGRAMAS:
-//   - Casos de Uso del Cliente (imagen 2): "Realizar Compra",
-//     "Ver Historial de Pedidos", "Cancelar Pedido"
-//   - Diagrama de Secuencia (imagen 5): Proceso de compra completo
-//   - Diagrama de Estados (imagen 3): Transiciones de estado del pedido
-// ============================================================
+// Rutas de pedidos montadas en /api/pedidos.
+// Todas requieren sesión activa.
 
 const express = require('express');
 const router = express.Router();
@@ -25,9 +9,7 @@ const orderController = require('../controllers/orderController');
 const { isAuthenticated } = require('../middleware/auth');
 const { validateId } = require('../middleware/validators');
 
-// ============================================================
-// RUTAS (todas requieren autenticación)
-// ============================================================
+// Rutas de pedido protegidas por isAuthenticated.
 
 // --- CREAR PEDIDO (desde el carrito) ---
 // POST /api/pedidos/crear
@@ -52,7 +34,5 @@ router.get('/:id', isAuthenticated, validateId, orderController.obtenerPedido);
 // Restaura el stock de los productos
 router.put('/:id/cancelar', isAuthenticated, validateId, orderController.cancelarPedido);
 
-// ============================================================
-// EXPORTAR ROUTER
-// ============================================================
+// Exportar router
 module.exports = router;

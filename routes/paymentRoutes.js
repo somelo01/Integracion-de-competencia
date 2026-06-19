@@ -1,28 +1,5 @@
-// ============================================================
-// RUTAS: PAGOS (paymentRoutes.js)
-// ============================================================
-// Define las rutas para la integración con Webpay Plus.
-// El flujo de pago involucra redirecciones del navegador,
-// por eso la ruta /confirmar es GET (no POST).
-//
-// RELACIÓN CON OTROS ARCHIVOS:
-//   - controllers/paymentController.js → Lógica de Webpay
-//   - middleware/auth.js → crearTransaccion y obtenerPago necesitan sesión
-//   - app.js → Monta este router en /api/pagos
-//
-// CORRESPONDENCIA CON DIAGRAMAS:
-//   - Diagrama de Secuencia: Proceso de Compra (imagen 5):
-//     Muestra las interacciones entre Cliente, Backend y Webpay
-//   - ERD (imagen 4): Tablas "pagos" y "facturas"
-//   - Diagrama de Estados (imagen 3): Estados del pago
-//
-// FLUJO COMPLETO DE PAGO:
-//   1. Frontend: POST /api/pagos/crear → recibe url + token
-//   2. Frontend: Redirige usuario a url de Webpay
-//   3. Usuario: Paga en formulario de Webpay
-//   4. Webpay: Redirige a GET /api/pagos/confirmar?token_ws=XXX
-//   5. Backend: Confirma con tx.commit() y redirige a HTML
-// ============================================================
+// Rutas de pago Webpay montadas en /api/pagos.
+// /crear y /:id requieren sesión; /confirmar es callback GET.
 
 const express = require('express');
 const router = express.Router();
@@ -31,9 +8,7 @@ const router = express.Router();
 const paymentController = require('../controllers/paymentController');
 const { isAuthenticated } = require('../middleware/auth');
 
-// ============================================================
-// RUTAS
-// ============================================================
+// Rutas de pago
 
 // --- CREAR TRANSACCIÓN DE PAGO ---
 // POST /api/pagos/crear
@@ -55,7 +30,5 @@ router.get('/confirmar', paymentController.confirmarPago);
 // Devuelve estado del pago y factura si existe
 router.get('/:idPedido', isAuthenticated, paymentController.obtenerPago);
 
-// ============================================================
-// EXPORTAR ROUTER
-// ============================================================
+// Exportar router
 module.exports = router;

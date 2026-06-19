@@ -1,30 +1,5 @@
-// ============================================================
-// RUTAS: ADMINISTRACIÓN (adminRoutes.js)
-// ============================================================
-// Define TODAS las rutas del panel de administración.
-// Cada ruta pasa por DOS middlewares de seguridad:
-//   1. isAuthenticated → ¿El usuario tiene sesión activa?
-//   2. isAdmin → ¿El usuario tiene rol 'Admin'?
-//
-// RELACIÓN CON OTROS ARCHIVOS:
-//   - controllers/adminController.js → Lógica de cada operación
-//   - middleware/auth.js → isAuthenticated (primer filtro)
-//   - middleware/adminAuth.js → isAdmin (segundo filtro)
-//   - middleware/validators.js → validateProduct y validateId
-//   - app.js → Monta este router en /api/admin
-//
-// CORRESPONDENCIA CON DIAGRAMAS:
-//   - Casos de Uso del Admin (imagen 2): TODOS los casos del
-//     lado derecho: Gestionar Productos, Usuarios, Pedidos,
-//     Soporte y Dashboard
-//   - ERD (imagen 4): Acceso completo a todas las tablas
-//   - Diagrama de Estados (imagen 3): Transiciones de pedidos
-//   - Diagrama de Secuencia: Devolución/Reembolso (imagen 6)
-//
-// ORGANIZACIÓN DE RUTAS:
-//   Las rutas están agrupadas por sección (Productos, Usuarios,
-//   Pedidos, Soporte, Dashboard) para facilitar la lectura.
-// ============================================================
+// Rutas de administración montadas en /api/admin.
+// Aplica isAuthenticated e isAdmin a todo el router.
 
 const express = require('express');
 const router = express.Router();
@@ -35,22 +10,10 @@ const { isAuthenticated } = require('../middleware/auth');
 const { isAdmin } = require('../middleware/adminAuth');
 const { validateProduct, validateId } = require('../middleware/validators');
 
-// ============================================================
-// MIDDLEWARE GLOBAL DEL ROUTER
-// ============================================================
-// router.use() aplica estos middlewares a TODAS las rutas
-// definidas en este router. Así no hay que repetirlos en cada
-// ruta individual.
-//
-// CADENA: isAuthenticated → isAdmin → controlador
-// Si isAuthenticated falla → 401 (no logueado)
-// Si isAdmin falla → 403 (no es admin)
-// ============================================================
+// Aplicar autenticación y comprobación de admin a todo el router.
 router.use(isAuthenticated, isAdmin);
 
-// ============================================================
-// =================== PRODUCTOS ==============================
-// ============================================================
+// Productos
 
 // --- LISTAR TODOS LOS PRODUCTOS (incluyendo inactivos) ---
 // GET /api/admin/productos?page=1&limit=20
@@ -82,9 +45,7 @@ router.put('/productos/:id/toggle', validateId, adminController.toggleProducto);
 // ADVERTENCIA: Eliminación permanente (hard delete)
 router.delete('/productos/:id', validateId, adminController.eliminarProducto);
 
-// ============================================================
-// =================== USUARIOS ===============================
-// ============================================================
+// Usuarios
 
 // --- LISTAR TODOS LOS USUARIOS ---
 // GET /api/admin/usuarios
@@ -95,9 +56,7 @@ router.get('/usuarios', adminController.listarUsuarios);
 // No puede eliminarse a sí mismo
 router.delete('/usuarios/:id', validateId, adminController.eliminarUsuario);
 
-// ============================================================
-// =================== PEDIDOS ================================
-// ============================================================
+// Pedidos
 
 // --- LISTAR TODOS LOS PEDIDOS ---
 // GET /api/admin/pedidos?estado=Pendiente&page=1&limit=20
@@ -110,9 +69,7 @@ router.get('/pedidos', adminController.listarTodosPedidos);
 // Valida transiciones permitidas según diagrama de estados
 router.put('/pedidos/:id/estado', validateId, adminController.actualizarEstado);
 
-// ============================================================
-// =================== SOPORTE ================================
-// ============================================================
+// Soporte
 
 // --- LISTAR TODOS LOS TICKETS ---
 // GET /api/admin/soporte?estado=Abierto&tipo=Reembolso
@@ -130,16 +87,12 @@ router.put('/soporte/:id/responder', validateId, adminController.responderTicket
 // Actualiza pago, pedido, stock y cierra el ticket
 router.put('/soporte/:id/reembolso', validateId, adminController.procesarReembolso);
 
-// ============================================================
-// =================== DASHBOARD ==============================
-// ============================================================
+// Dashboard
 
 // --- OBTENER ESTADÍSTICAS ---
 // GET /api/admin/dashboard
 // Devuelve conteos de productos, pedidos, tickets, usuarios e ingresos
 router.get('/dashboard', adminController.obtenerEstadisticas);
 
-// ============================================================
-// EXPORTAR ROUTER
-// ============================================================
+// Exportar router
 module.exports = router;

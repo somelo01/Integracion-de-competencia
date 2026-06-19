@@ -1,29 +1,5 @@
-// ============================================================
-// RUTAS: PRODUCTOS (productRoutes.js)
-// ============================================================
-// Define las rutas PÚBLICAS del catálogo de productos.
-// Estas rutas NO requieren autenticación porque cualquier
-// visitante (incluso sin cuenta) puede explorar el catálogo.
-//
-// RELACIÓN CON OTROS ARCHIVOS:
-//   - controllers/productController.js → Lógica de cada endpoint
-//   - middleware/validators.js → validateId para validar parámetro :id
-//   - app.js → Monta este router en /api/productos
-//
-// CORRESPONDENCIA CON DIAGRAMAS:
-//   - Casos de Uso del Cliente (imagen 2): "Buscar Productos",
-//     "Filtrar por Categoría/Precio", "Ver Detalle de Producto"
-//   - ERD (imagen 4): Tabla "gestion_productos"
-//
-// IMPORTANTE SOBRE EL ORDEN DE LAS RUTAS:
-//   Las rutas específicas (/buscar, /filtrar, /categorias) deben
-//   ir ANTES de la ruta con parámetro (/:id). Si /:id va primero,
-//   Express interpretaría "buscar" como un ID y nunca llegaría a
-//   la ruta /buscar.
-//
-//   Correcto: /buscar → /filtrar → /categorias → /:id
-//   Incorrecto: /:id → /buscar (nunca llega aquí)
-// ============================================================
+// Rutas públicas de productos montadas en /api/productos.
+// No requieren autenticación.
 
 const express = require('express');
 const router = express.Router();
@@ -34,9 +10,7 @@ const productController = require('../controllers/productController');
 // Importar validador de ID para rutas con parámetro :id
 const { validateId } = require('../middleware/validators');
 
-// ============================================================
-// RUTAS PÚBLICAS (sin autenticación)
-// ============================================================
+// Rutas públicas de productos
 
 // --- LISTAR TODOS LOS PRODUCTOS (paginados) ---
 // GET /api/productos?page=1&limit=12
@@ -64,7 +38,5 @@ router.get('/categorias', productController.listarCategorias);
 // validateId verifica que :id sea un entero positivo
 router.get('/:id', validateId, productController.obtenerProducto);
 
-// ============================================================
-// EXPORTAR ROUTER
-// ============================================================
+// Exportar router
 module.exports = router;

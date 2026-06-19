@@ -1,22 +1,5 @@
-// ============================================================
-// RUTAS: CARRITO DE COMPRAS (cartRoutes.js)
-// ============================================================
-// Define las rutas para la gestión del carrito de compras.
-// TODAS las rutas requieren autenticación (isAuthenticated)
-// porque el carrito pertenece a un usuario específico.
-//
-// RELACIÓN CON OTROS ARCHIVOS:
-//   - controllers/cartController.js → Lógica de cada operación
-//   - middleware/auth.js → isAuthenticated protege todas las rutas
-//   - middleware/validators.js → validateCartItem valida al agregar
-//   - app.js → Monta este router en /api/carrito
-//
-// CORRESPONDENCIA CON DIAGRAMAS:
-//   - Casos de Uso del Cliente (imagen 2): "Agregar al Carrito",
-//     "Ver Carrito", "Modificar Cantidad", "Eliminar del Carrito"
-//   - ERD (imagen 4): Tablas "carrito_compras" y "detalle_carrito"
-//   - Diagrama de Secuencia (imagen 5): Paso previo a crear pedido
-// ============================================================
+// Rutas de carrito montadas en /api/carrito.
+// Todas requieren sesión activa.
 
 const express = require('express');
 const router = express.Router();
@@ -26,9 +9,7 @@ const cartController = require('../controllers/cartController');
 const { isAuthenticated } = require('../middleware/auth');
 const { validateCartItem } = require('../middleware/validators');
 
-// ============================================================
-// TODAS LAS RUTAS REQUIEREN AUTENTICACIÓN
-// ============================================================
+// Rutas protegidas de carrito
 
 // --- VER CONTENIDO DEL CARRITO ---
 // GET /api/carrito
@@ -57,7 +38,5 @@ router.delete('/eliminar/:idDetalle', isAuthenticated, cartController.eliminarIt
 // Elimina todos los items del carrito
 router.delete('/vaciar', isAuthenticated, cartController.vaciarCarrito);
 
-// ============================================================
-// EXPORTAR ROUTER
-// ============================================================
+// Exportar router
 module.exports = router;

@@ -1,23 +1,5 @@
-// ============================================================
-// CONFIGURACIÓN DE BASE DE DATOS - MySQL (XAMPP)
-// ============================================================
-// Este archivo configura la conexión a MySQL usando un "pool"
-// de conexiones. Un pool es como una "piscina" de conexiones
-// abiertas que se reutilizan, en vez de abrir/cerrar una
-// conexión nueva por cada consulta (más eficiente).
-//
-// IMPORTANTE: Usa mysql2/promise para poder usar async/await
-// en los controladores en vez de callbacks anidados.
-//
-// CÓMO SE USA EN OTROS ARCHIVOS:
-//   const pool = require('../config/db');
-//   const [rows] = await pool.query('SELECT * FROM usuarios WHERE id_usuario = ?', [id]);
-//
-// Los "?" son placeholders parametrizados que PREVIENEN
-// SQL Injection. NUNCA concatenar variables directamente:
-//   MAL:  `SELECT * FROM usuarios WHERE id = ${id}`
-//   BIEN: `SELECT * FROM usuarios WHERE id = ?`, [id]
-// ============================================================
+// Configuración de base de datos MySQL usando mysql2/promise.
+// Exporta un pool de conexiones reutilizables.
 
 const mysql = require('mysql2/promise');
 require('dotenv').config();
@@ -35,10 +17,7 @@ const pool = mysql.createPool({
   queueLimit: 0                                    // Sin límite de cola de espera
 });
 
-// ============================================================
-// Función helper para verificar la conexión al iniciar el servidor.
-// Se llama desde app.js al arrancar.
-// ============================================================
+// Verifica la conexión a MySQL al arrancar el servidor.
 async function testConnection() {
   try {
     const connection = await pool.getConnection();

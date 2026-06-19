@@ -1,31 +1,5 @@
-// ============================================================
-// RUTAS: AUTENTICACIÓN (authRoutes.js)
-// ============================================================
-// Define las rutas (endpoints) para el módulo de autenticación.
-// Cada ruta conecta una URL + método HTTP con un controlador.
-//
-// ¿QUÉ ES UN ROUTER?
-// Un Router de Express es como un "mini-app" que agrupa rutas
-// relacionadas. En app.js se monta con:
-//   app.use('/api/auth', authRoutes);
-// Entonces POST /registro aquí → POST /api/auth/registro completo.
-//
-// FLUJO DE UNA PETICIÓN:
-//   URL + Método → Middleware(s) → Controlador
-//   POST /api/auth/registro → validateRegister → authController.registrar
-//
-// RELACIÓN CON OTROS ARCHIVOS:
-//   - controllers/authController.js → Contiene la lógica de cada función
-//   - middleware/validators.js → Validaciones que se ejecutan antes del controlador
-//   - middleware/auth.js → Protege rutas que requieren sesión activa
-//   - app.js → Monta este router en /api/auth
-//
-// CORRESPONDENCIA CON DIAGRAMAS:
-//   - Casos de Uso del Cliente (imagen 2):
-//     "Registrarse", "Iniciar Sesión", "Cerrar Sesión",
-//     "Recuperar Contraseña"
-//   - Diagrama de Secuencia (imagen 5): Flujo de autenticación
-// ============================================================
+// Rutas de autenticación montadas en /api/auth.
+// Cada ruta administra login, registro, perfil y recuperación.
 
 const express = require('express');
 const router = express.Router();
@@ -37,15 +11,7 @@ const authController = require('../controllers/authController');
 const { isAuthenticated } = require('../middleware/auth');
 const { validateRegister, validateLogin } = require('../middleware/validators');
 
-// ============================================================
-// DEFINICIÓN DE RUTAS
-// ============================================================
-// Cada ruta usa router.MÉTODO(ruta, [middlewares], controlador)
-//
-// IMPORTANTE SOBRE EL ORDEN DE MIDDLEWARES:
-// Se ejecutan de izquierda a derecha. Si el middleware rechaza
-// la petición (ej: validación falla), el controlador NUNCA se ejecuta.
-// ============================================================
+// Definición de rutas de autenticación con sus middlewares.
 
 // --- REGISTRO ---
 // POST /api/auth/registro
@@ -103,9 +69,5 @@ router.post('/reset/:token', authController.restablecerContrasena);
 // USADO POR: El frontend al cargar cada página (auth.js del frontend)
 router.get('/session', authController.verificarSesion);
 
-// ============================================================
-// EXPORTAR EL ROUTER
-// ============================================================
-// app.js importa este módulo y lo monta en /api/auth
-// ============================================================
+// Exportar router
 module.exports = router;
