@@ -16,22 +16,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- ============================================================
--- TABLA: recuperar_acceso
--- ============================================================
--- Almacena tokens temporales para el flujo de recuperación
--- de contraseña. Cada token tiene una expiración de 1 hora.
--- Basada en la entidad "Recuperar_Acceso" del ERD (imagen 4).
---
--- Flujo:
---   1. Usuario solicita recuperación → Se genera token + expiración
---   2. Usuario recibe enlace con token (simulado en este proyecto)
---   3. Usuario usa el token para establecer nueva contraseña
---   4. Token se marca como "usado" para evitar reutilización
---
--- Relaciones:
---   ← usuarios.id_usuario (N:1) - A qué usuario pertenece
--- ============================================================
+-- Tabla recuperar_acceso: tokens de recuperación de contraseña.
+-- Cada token contiene expiración y bandera de uso.
 CREATE TABLE IF NOT EXISTS recuperar_acceso (
   id_recuperacion INT AUTO_INCREMENT PRIMARY KEY,
   id_usuario INT NOT NULL,
@@ -47,22 +33,8 @@ CREATE TABLE IF NOT EXISTS recuperar_acceso (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- ============================================================
--- TABLA: gestion_productos
--- ============================================================
--- Catálogo completo de productos de la tienda de ropa.
--- Basada en la entidad "Gestion de Productos" del ERD (imagen 4)
--- y la clase "Gestion_Productos" del diagrama UML (imagen.png).
---
--- Campos del ERD: ID_producto, Nombre, Categoría, Precio, Stock
--- Campos adicionales del UML: Talla, Color (diagrama de clases)
--- Campo adicional: 'activo' para soportar el caso de uso
--- "Ocultar/Eliminar Producto" del admin (imagen 2) sin borrar datos.
---
--- Relaciones:
---   → detalle_carrito (1:N) - Productos en carritos
---   → detalle_pedido (1:N) - Productos en pedidos
--- ============================================================
+-- Tabla gestion_productos: catálogo de productos.
+-- Incluye datos básicos, stock, talla, color, imagen y estado activo.
 CREATE TABLE IF NOT EXISTS gestion_productos (
   id_producto INT AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(150) NOT NULL,
@@ -82,20 +54,8 @@ CREATE TABLE IF NOT EXISTS gestion_productos (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- ============================================================
--- TABLA: filtros_busqueda
--- ============================================================
--- Almacena los filtros de búsqueda aplicados por los usuarios.
--- Basada en la entidad "filtros_Busqueda" del ERD (imagen 4)
--- y la clase "Filtros_Busqueda" del diagrama UML (imagen.png).
---
--- Nota: En esta implementación, los filtros se aplican en tiempo
--- real via query params en la API. Esta tabla permite guardar
--- búsquedas favoritas (funcionalidad opcional).
---
--- Relaciones:
---   ← usuarios.id_usuario (N:1) - Qué usuario guardó el filtro
--- ============================================================
+-- Tabla filtros_busqueda: filtros guardados por usuario.
+-- Permite asociar filtros de búsqueda a un usuario.
 CREATE TABLE IF NOT EXISTS filtros_busqueda (
   id_filtro INT AUTO_INCREMENT PRIMARY KEY,
   id_usuario INT DEFAULT NULL,
@@ -114,20 +74,8 @@ CREATE TABLE IF NOT EXISTS filtros_busqueda (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- ============================================================
--- TABLA: carrito_compras
--- ============================================================
--- Representa el carrito de compras activo de cada usuario.
--- Basada en la entidad "Carrito_Compras" del ERD (imagen 4).
---
--- Cada usuario tiene UN SOLO carrito activo (UNIQUE en id_usuario).
--- El carrito se crea automáticamente al registrar un usuario.
--- Los productos del carrito están en la tabla detalle_carrito.
---
--- Relaciones:
---   ← usuarios.id_usuario (1:1) - A qué usuario pertenece
---   → detalle_carrito (1:N) - Productos dentro del carrito
--- ============================================================
+-- Tabla carrito_compras: carrito activo por usuario.
+-- Cada usuario tiene un carrito único con sus productos.
 CREATE TABLE IF NOT EXISTS carrito_compras (
   id_carrito INT AUTO_INCREMENT PRIMARY KEY,
   id_usuario INT NOT NULL UNIQUE,             -- Un solo carrito por usuario
@@ -140,21 +88,8 @@ CREATE TABLE IF NOT EXISTS carrito_compras (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- ============================================================
--- TABLA: detalle_carrito
--- ============================================================
--- Tabla intermedia que resuelve la relación Muchos-a-Muchos
--- entre carrito_compras y gestion_productos.
--- Basada en la entidad "Detalle_Carrito" del ERD (imagen 4).
---
--- Cada fila = un producto agregado al carrito con su cantidad.
--- UNIQUE(id_carrito, id_producto) evita duplicados: si el usuario
--- agrega el mismo producto dos veces, se suma la cantidad.
---
--- Relaciones:
---   ← carrito_compras.id_carrito (N:1)
---   ← gestion_productos.id_producto (N:1)
--- ============================================================
+-- Tabla detalle_carrito: productos y cantidades del carrito.
+-- Evita duplicados con UNIQUE(id_carrito, id_producto).
 CREATE TABLE IF NOT EXISTS detalle_carrito (
   id_detalle_carrito INT AUTO_INCREMENT PRIMARY KEY,
   id_carrito INT NOT NULL,
@@ -176,27 +111,8 @@ CREATE TABLE IF NOT EXISTS detalle_carrito (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- ============================================================
--- TABLA: pedidos
--- ============================================================
--- Registra las órdenes de compra confirmadas por los clientes.
--- Basada en la entidad "Pedidos" del ERD (imagen 4).
---
--- Estados (del ERD + extensiones para logística del diagrama 3):
---   'Pendiente'  → Pedido creado, esperando pago
---   'Aprobado'   → Pago exitoso, listo para despacho
---   'Rechazado'  → Pago rechazado por la pasarela
---   'Cancelado'  → Cancelado por el cliente o admin
---   'Enviado'    → En camino (coordinador de despacho)
---   'Entregado'  → Recibido por el cliente
---
--- Relaciones:
---   ← usuarios.id_usuario (N:1) - Quién hizo el pedido
---   → detalle_pedido (1:N) - Productos del pedido
---   → pagos (1:1) - Información del pago
---   → facturas (1:1) - Comprobante PDF
---   → soporte (1:N) - Tickets asociados
--- ============================================================
+-- Tabla pedidos: órdenes de compra del cliente.
+-- Incluye estado, total y relación con usuario.
 CREATE TABLE IF NOT EXISTS pedidos (
   id_pedido INT AUTO_INCREMENT PRIMARY KEY,
   id_usuario INT NOT NULL,
@@ -212,21 +128,8 @@ CREATE TABLE IF NOT EXISTS pedidos (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- ============================================================
--- TABLA: detalle_pedido
--- ============================================================
--- Tabla intermedia que resuelve la relación Muchos-a-Muchos
--- entre pedidos y gestion_productos.
--- Basada en la entidad "Detalle_Pedido" del ERD (imagen 4).
---
--- Guarda el precio_unitario al momento de la compra para que
--- si el admin cambia el precio después, el historial no se vea
--- afectado (integridad histórica).
---
--- Relaciones:
---   ← pedidos.id_pedido (N:1)
---   ← gestion_productos.id_producto (N:1)
--- ============================================================
+-- Tabla detalle_pedido: productos y precios en cada pedido.
+-- Conserva el precio unitario histórico en el momento de compra.
 CREATE TABLE IF NOT EXISTS detalle_pedido (
   id_detalle INT AUTO_INCREMENT PRIMARY KEY,
   id_pedido INT NOT NULL,
@@ -249,26 +152,8 @@ CREATE TABLE IF NOT EXISTS detalle_pedido (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- ============================================================
--- TABLA: pagos
--- ============================================================
--- Registra la información de pago asociada a cada pedido.
--- Basada en la entidad "Pagos" del ERD (imagen 4) y el
--- Diagrama de Secuencia del Proceso de Compra (imagen 5).
---
--- En este proyecto se integra Transbank Webpay Plus (sandbox).
--- El token_ws y datos de respuesta de Transbank se guardan aquí.
---
--- Estados:
---   'Pendiente'    → Esperando procesamiento
---   'Aprobado'     → Transbank aprobó el pago
---   'Rechazado'    → Transbank rechazó el pago
---   'Cancelado'    → Usuario canceló en el formulario de Transbank
---   'Reembolsado'  → Se ejecutó un reembolso (diagrama 6)
---
--- Relaciones:
---   ← pedidos.id_pedido (1:1) - A qué pedido corresponde
--- ============================================================
+-- Tabla pagos: información de pago de cada pedido.
+-- Incluye estado, método, monto y token Webpay.
 CREATE TABLE IF NOT EXISTS pagos (
   id_pago INT AUTO_INCREMENT PRIMARY KEY,
   id_pedido INT NOT NULL,
@@ -286,18 +171,8 @@ CREATE TABLE IF NOT EXISTS pagos (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- ============================================================
--- TABLA: facturas
--- ============================================================
--- Almacena los comprobantes de compra generados tras un pago
--- exitoso. Basada en la entidad "Facturas" del ERD (imagen 4).
---
--- Se genera una factura automáticamente al aprobarse un pago.
--- El campo comprobante_pdf almacena la ruta al archivo PDF.
---
--- Relaciones:
---   ← pedidos.id_pedido (1:1) - Una factura por pedido
--- ============================================================
+-- Tabla facturas: comprobantes generados tras un pago aprobado.
+-- Guarda la ruta al PDF del comprobante.
 CREATE TABLE IF NOT EXISTS facturas (
   id_factura INT AUTO_INCREMENT PRIMARY KEY,
   id_pedido INT NOT NULL UNIQUE,              -- Una sola factura por pedido
@@ -311,27 +186,8 @@ CREATE TABLE IF NOT EXISTS facturas (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- ============================================================
--- TABLA: soporte
--- ============================================================
--- Sistema de tickets de ayuda y solicitudes de reembolso.
--- Basada en la entidad "Soporte" del ERD (imagen 4) y la
--- clase "Soporte" del diagrama UML (imagen.png).
---
--- Soporta el flujo de Devolución/Reembolso del Diagrama de
--- Secuencia (imagen 6): el cliente crea un ticket tipo 'Reembolso'
--- asociado a un pedido, y el admin lo evalúa y responde.
---
--- Tipos de ticket:
---   'Consulta'          → Pregunta general
---   'Reembolso'         → Solicitud de devolución (necesita id_pedido)
---   'Problema Técnico'  → Error en la plataforma
---   'Otro'              → Otros asuntos
---
--- Relaciones:
---   ← usuarios.id_usuario (N:1) - Quién creó el ticket
---   ← pedidos.id_pedido (N:1, opcional) - Pedido asociado (reembolsos)
--- ============================================================
+-- Tabla soporte: tickets de ayuda y solicitudes de reembolso.
+-- Tipo, estado, pedido asociado y respuesta del administrador.
 CREATE TABLE IF NOT EXISTS soporte (
   id_ticket INT AUTO_INCREMENT PRIMARY KEY,
   id_usuario INT NOT NULL,
@@ -356,13 +212,7 @@ CREATE TABLE IF NOT EXISTS soporte (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
--- ============================================================
--- ÍNDICES ADICIONALES
--- ============================================================
--- Mejoran el rendimiento de consultas frecuentes (búsquedas,
--- filtros, listados). phpMyAdmin los mostrará en la pestaña
--- "Estructura" de cada tabla.
--- ============================================================
+-- Índices adicionales para consultas frecuentes.
 
 -- Buscar productos por categoría (filtro más usado en el catálogo)
 CREATE INDEX idx_producto_categoria ON gestion_productos(categoria);
