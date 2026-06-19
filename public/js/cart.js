@@ -227,7 +227,8 @@ function updateCartTotal(items) {
   if (!totalElement) return;
 
   const total = items.reduce((sum, item) => {
-    return sum + (item.subtotal || (item.precio * item.cantidad));
+    const subtotal = Number(item.subtotal !== undefined && item.subtotal !== null ? item.subtotal : (item.precio * item.cantidad));
+    return sum + (isNaN(subtotal) ? 0 : subtotal);
   }, 0);
 
   totalElement.textContent = formatCurrency(total);
@@ -243,8 +244,8 @@ function recalculateTotal() {
   let total = 0;
 
   inputs.forEach(input => {
-    const price = parseFloat(input.dataset.price) || 0;
-    const quantity = parseInt(input.value) || 0;
+    const price = Number(input.dataset.price) || 0;
+    const quantity = Number(input.value) || 0;
     total += price * quantity;
   });
 

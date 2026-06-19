@@ -66,7 +66,8 @@ async function loadCheckoutSummary() {
 
         // Calcular y mostrar el total
         const total = items.reduce((sum, item) => {
-          return sum + (item.subtotal || (item.precio * item.cantidad));
+          const subtotal = Number(item.subtotal !== undefined && item.subtotal !== null ? item.subtotal : (item.precio * item.cantidad));
+          return sum + (isNaN(subtotal) ? 0 : subtotal);
         }, 0);
 
         if (totalElement) {

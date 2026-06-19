@@ -144,7 +144,7 @@ async function loadTickets() {
     const response = await apiRequest('/api/soporte');
 
     if (response.success && response.data) {
-      const tickets = Array.isArray(response.data) ? response.data : [];
+      const tickets = Array.isArray(response.data.tickets) ? response.data.tickets : (response.data.tickets || []);
 
       if (tickets.length === 0) {
         container.innerHTML = `

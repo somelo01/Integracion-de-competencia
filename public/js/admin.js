@@ -312,7 +312,7 @@ async function loadAdminUsers() {
     const response = await apiRequest('/api/admin/usuarios');
 
     if (response.success && response.data) {
-      const users = Array.isArray(response.data) ? response.data : [];
+      const users = Array.isArray(response.data.usuarios) ? response.data.usuarios : (response.data.usuarios || []);
 
       if (users.length === 0) {
         tableBody.innerHTML = `
@@ -491,7 +491,7 @@ async function updateOrderStatus(orderId, newStatus) {
   }
 
   try {
-    const response = await apiRequest(`/api/admin/pedidos/${orderId}`, 'PUT', {
+    const response = await apiRequest(`/api/admin/pedidos/${orderId}/estado`, 'PUT', {
       estado: newStatus
     });
 
@@ -538,7 +538,7 @@ async function loadAdminTickets() {
     const response = await apiRequest('/api/admin/soporte');
 
     if (response.success && response.data) {
-      const tickets = Array.isArray(response.data) ? response.data : [];
+      const tickets = Array.isArray(response.data.tickets) ? response.data.tickets : (response.data.tickets || []);
 
       if (tickets.length === 0) {
         tableBody.innerHTML = `

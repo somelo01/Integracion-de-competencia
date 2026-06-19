@@ -283,7 +283,7 @@ async function loadCategories() {
     const response = await apiRequest('/api/productos/categorias');
 
     if (response.success && response.data) {
-      const categories = Array.isArray(response.data) ? response.data : [];
+      const categories = Array.isArray(response.data) ? response.data : (response.data.categorias || []);
 
       // Agregar cada categoría como opción del <select>
       categories.forEach(cat => {
