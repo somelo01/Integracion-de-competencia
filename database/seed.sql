@@ -17,7 +17,7 @@ INSERT INTO gestion_productos (nombre, categoria, precio, stock, talla, color, d
 
 
 ('Pantalón Jogger - Anime', 'Pantalones', 22990.00, 30, 'S', 'Gris', 'Jogger deportivo con logo discreto de estudio. Cómodo y resistente.', '/img/jogger-gris.jpg'),
-('Pantalón One Piece - Mugiwara', 'Pantalones', 32990.00, 30, 'M', 'Negro', 'Pantalón inspirado en el universo One Piece.', '/img/pantalon-onepiece.jpg'),
+('Pantalón One Piece - Mugiwara', 'Pantalones', 32990.00, 30, 'M', 'Negro', 'Pantalón inspirado en el universo One Piece.', '/img/pantalones-one-piece.png'),
     
 ('Vestido Primaveral - Floral Anime', 'Vestidos', 35990.00, 15, 'S', 'Rosa', 'Vestido con estampado floral inspirado en las celebraciones primaverales.', '/img/vestido-rosa.jpg'),
 ('Vestido Elegante Anime - Gala Cosplay', 'Vestidos', 59990.00, 10, 'M', 'Negro', 'Vestido elegante ideal para eventos, convenciones y cosplay de gala.', '/img/vestido-anime.jpg'),
