@@ -1,182 +1,113 @@
-# ️ Tienda de Ropa — Sistema E-Commerce
+# Otaku Street - Tienda Otaku
 
-Sistema web completo de comercio electrónico para venta de ropa, desarrollado con Node.js, Express, MySQL y Bootstrap 5. Incluye integración con **Webpay Plus** (Transbank) para procesamiento de pagos.
+Este proyecto es nuestra tienda otaku hecha con Node.js, Express y MySQL. La idea fue crear una tienda online para vender ropa, accesorios y productos de anime con carrito, pago por Webpay y un panel de administración básico.
 
-## Requisitos Previos
+Aquí lo armamos con nuestro propio estilo, queremos que se note que es un trabajo de curso hecho por el grupo.
 
-- [XAMPP](https://www.apachefriends.org/) (incluye Apache + MySQL + phpMyAdmin)
-- [Node.js](https://nodejs.org/) v18 o superior
-- npm (incluido con Node.js)
+## Sobre el negocio
 
-## Instalación Paso a Paso
+Ensigna es una tienda pensada para fans del anime. En el sitio se puede:
+- ver productos con imágenes y descripción,
+- filtrar por categoría, talla, color y precio,
+- buscar por nombre,
+- agregar al carrito,
+- hacer el checkout con Webpay,
+- y en la zona de admin gestionar productos, pedidos, usuarios y tickets de soporte.
 
-### 1. Preparar la Base de Datos
+## Integrantes del grupo
 
-1. Abrir **XAMPP Control Panel**
-2. Iniciar **Apache** y **MySQL** (ambos deben estar en verde)
-3. Abrir el navegador e ir a: `http://localhost/phpmyadmin`
-4. En phpMyAdmin:
-   - Ir a la pestaña **"Importar"**
-   - Seleccionar el archivo `database/schema.sql`
-   - Click en **"Continuar"** → Se crearán la base de datos y todas las tablas
-5. Repetir el paso 4 con el archivo `database/seed.sql` para cargar datos de prueba
+- Nicolás Espinoza
+- Javiera Be
+- Carlos Aravena
+- Rayen Gutiérrez
 
-### 2. Instalar Dependencias
+## Requisitos
+
+Necesitas tener:
+- XAMPP instalado y corriendo Apache + MySQL,
+- Node.js instalado (recomendado v18 o superior),
+- npm disponible desde la terminal.
+
+## Cómo levantar el proyecto
+
+1. Abre XAMPP y enciende Apache y MySQL.
+2. Abre el navegador y entra a `http://localhost/phpmyadmin`.
+3. En phpMyAdmin importa primero `database/schema.sql` y luego `database/seed.sql`.
+4. Abre una terminal y ve a la carpeta del proyecto:
 
 ```bash
-cd AyudantiaWeb_Integracio
+cd "c:\xampp\htdocs\Ensigna\Ensigna Programa"
+```
+
+5. Instala las dependencias:
+
+```bash
 npm install
 ```
 
-### 3. Configurar Variables de Entorno
-
-El archivo `.env` ya está configurado para XAMPP por defecto:
-```
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASS=
-DB_NAME=tienda_ropa
-```
-> Si tu XAMPP tiene una contraseña diferente para MySQL, modifica `DB_PASS`.
-
-### 4. Iniciar el Servidor
+6. Arranca el servidor:
 
 ```bash
-# Modo desarrollo (con hot-reload automático)
-npm run dev
-
-# Modo producción
-npm start
+npm run dev 
+o
+npm start 
 ```
 
-### 5. Abrir la Aplicación
+7. Abre el sitio en el navegador en:
 
-Ir a: **http://localhost:3000**
-
-## Usuarios de Prueba
-
-| Rol | Email | Contraseña |
-|---|---|---|
-| **Admin** | admin@tienda.com | Admin123! |
-| **Cliente** | cliente@test.com | Cliente123! |
-
-## Tarjetas de Prueba (Webpay Plus Sandbox)
-
-| Resultado | Número de Tarjeta | CVV | Fecha Exp |
-|---|---|---|---|
-| **Aprobada** | 4051 8856 0044 6623 | 123 | Cualquier futura |
-| **Rechazada** | 5186 0595 5959 0568 | 123 | Cualquier futura |
-
-> **RUT de prueba:** 11.111.111-1 | **Clave:** 123
-
-## ️ Estructura del Proyecto
-
-```
-├── database/
-│   ├── schema.sql        ← DDL de la base de datos (11 tablas)
-│   └── seed.sql          ← Datos de prueba
-├── config/
-│   └── db.js             ← Conexión MySQL (pool)
-├── middleware/
-│   ├── auth.js           ← Verificar sesión activa
-│   ├── adminAuth.js      ← Verificar rol Admin
-│   └── validators.js     ← Regex y validaciones
-├── routes/
-│   ├── authRoutes.js     ← /api/auth/*
-│   ├── productRoutes.js  ← /api/productos/*
-│   ├── cartRoutes.js     ← /api/carrito/*
-│   ├── orderRoutes.js    ← /api/pedidos/*
-│   ├── paymentRoutes.js  ← /api/pagos/*
-│   ├── supportRoutes.js  ← /api/soporte/*
-│   └── adminRoutes.js    ← /api/admin/*
-├── controllers/
-│   ├── authController.js
-│   ├── productController.js
-│   ├── cartController.js
-│   ├── orderController.js
-│   ├── paymentController.js
-│   ├── supportController.js
-│   └── adminController.js
-├── public/
-│   ├── css/styles.css
-│   ├── js/               ← 8 archivos JS del frontend
-│   └── pages/            ← 14 páginas HTML (+ 5 admin)
-├── app.js                ← Entry point del servidor
-├── package.json
-├── .env
-└── README.md
+```text
+http://localhost:3000
 ```
 
-## Diagramas del Proyecto
+> Si tu MySQL de XAMPP tiene contraseña, edita el archivo `.env` y cambia `DB_PASS`.
 
-Este sistema fue diseñado a partir de los siguientes diagramas UML:
+## Acceso rápido
 
-| Imagen | Diagrama | Descripción |
-|---|---|---|
-| `imagen.png` | Diagrama de Clases UML | Estructura de clases del backend |
-| `imagen (1).png` | Casos de Uso - Cliente | Flujos del usuario final |
-| `imagen (2).png` | Casos de Uso - Admin | Flujos del administrador |
-| `imagen (3).png` | Casos de Uso - Bodega/Despacho | Flujos logísticos |
-| `imagen (4).png` | ERD (Modelo Relacional) | Esquema de la base de datos |
-| `imagen (5).png` | Secuencia - Proceso de Compra | Flujo de pago con pasarela |
-| `imagen (6).png` | Secuencia - Devolución/Reembolso | Flujo de post-venta |
-| `imagen (7).png` | Secuencia - Gestión de Productos | CRUD admin de productos |
+- Admin: `admin@tienda.com` / `Admin123!`
+- Cliente: `cliente@test.com` / `Cliente123!`
 
-## Seguridad Implementada
+## Estructura básica del proyecto
 
-- Contraseñas hasheadas con **bcryptjs** (10 salt rounds)
-- Consultas **parametrizadas** (previene SQL Injection)
-- Sanitización de entrada (previene XSS)
-- Sesiones en MySQL con **httpOnly cookies**
-- Middleware de autenticación y autorización por roles
-- Validación con **regex** tanto en frontend como backend
-- Verificación de pertenencia (un usuario no accede a datos de otro)
+- `app.js`: punto de entrada del servidor
+- `config/db.js`: conexión a la base de datos
+- `routes/`: define las rutas de la API
+- `controllers/`: lógica de cada endpoint
+- `public/`: archivos del frontend (HTML, CSS, JS)
+- `database/`: scripts para crear y poblar la base de datos
 
-## API Endpoints
+## Qué incluye Ensigna
 
-### Autenticación (`/api/auth`)
-| Método | Ruta | Auth | Descripción |
-|---|---|---|---|
-| POST | /registro | No | Registrar usuario |
-| POST | /login | No | Iniciar sesión |
-| POST | /logout | Sí | Cerrar sesión |
-| GET | /perfil | Sí | Obtener datos del perfil |
-| PUT | /perfil | Sí | Editar perfil |
-| GET | /session | No | Verificar sesión activa |
+- Catálogo con paginación
+- Búsqueda y filtros
+- Página de producto detallada
+- Carrito de compras con actualización de cantidades
+- Checkout con integración a Webpay
+- Panel admin para productos, usuarios, pedidos y soporte
+- Autenticación con sesión en MySQL
 
-### Productos (`/api/productos`)
-| Método | Ruta | Auth | Descripción |
-|---|---|---|---|
-| GET | / | No | Listar productos (paginado) |
-| GET | /buscar?q= | No | Buscar por nombre |
-| GET | /filtrar | No | Filtrar por categoría/precio/talla/color |
-| GET | /categorias | No | Listar categorías |
-| GET | /:id | No | Detalle de un producto |
+## Notas importantes
 
-### Carrito (`/api/carrito`)
-| Método | Ruta | Auth | Descripción |
-|---|---|---|---|
-| GET | / | Sí | Ver carrito |
-| POST | /agregar | Sí | Agregar producto |
-| PUT | /actualizar/:id | Sí | Cambiar cantidad |
-| DELETE | /eliminar/:id | Sí | Quitar producto |
-| DELETE | /vaciar | Sí | Vaciar carrito |
+- El checkout usa la pasarela Webpay
+- Las contraseñas se guardan con bcrypt.
 
-### Pedidos (`/api/pedidos`)
-| Método | Ruta | Auth | Descripción |
-|---|---|---|---|
-| POST | /crear | Sí | Crear pedido desde carrito |
-| GET | / | Sí | Historial de pedidos |
-| GET | /:id | Sí | Detalle del pedido |
-| PUT | /:id/cancelar | Sí | Cancelar pedido pendiente |
+## Endpoints principales
 
-### Pagos (`/api/pagos`)
-| Método | Ruta | Auth | Descripción |
-|---|---|---|---|
-| POST | /crear | Sí | Iniciar pago en Webpay |
-| GET | /confirmar | No | Callback de Webpay |
-| GET | /:idPedido | Sí | Info del pago de un pedido |
+- `/api/productos` - listar productos
+- `/api/productos/buscar` - buscar por texto
+- `/api/productos/filtrar` - aplicar filtros
+- `/api/carrito` - manejar el carrito
+- `/api/pedidos` - crear y ver pedidos
+- `/api/pagos` - pago y confirmación
+- `/api/admin` - funcionalidad de administrador
 
-### Admin (`/api/admin`) — Requiere rol Admin
-Gestión completa de: productos, usuarios, pedidos, tickets y reembolsos.
+## Cómo probar rápido
+
+1. Inicia sesión con el usuario admin.
+2. Entra al panel admin.
+3. Crea, edita y desactiva productos.
+4. En el sitio normal, agrega productos al carrito y prueba el checkout.
+5. En soporte puedes ver tickets y responderlos.
+
+## Tip extra
+
+Si algo no carga, revisa en la terminal si hay errores de conexión con MySQL, y asegúrate de que Apache y MySQL estén activos en XAMPP.
