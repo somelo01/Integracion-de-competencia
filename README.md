@@ -1,4 +1,4 @@
-# Otaku Street - Tienda Otaku
+# Ensigna - Tienda Otaku 
 
 Este proyecto es nuestra tienda otaku hecha con Node.js, Express y MySQL. La idea fue crear una tienda online para vender ropa, accesorios y productos de anime con carrito, pago por Webpay y un panel de administración básico.
 
