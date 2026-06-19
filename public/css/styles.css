@@ -1,40 +1,10 @@
 /* Importar fuente premium Inter de Google Fonts para un aspecto moderno y limpio */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-  /* ============================================================
-    ESTILOS PERSONALIZADOS - TIENDA DE ROPA E-COMMERCE
-    ============================================================
-    Este archivo complementa Bootstrap 5.3 con estilos propios.
-    Bootstrap ya provee la mayor parte del diseño (grid, botones,
-    formularios, etc.), aquí solo añadimos lo específico de
-    nuestra marca y funcionalidades.
-    
-    ESTRUCTURA:
-    1. Variables CSS (colores de marca)
-    2. Estilos globales (body, links)
-    3. Navbar personalizado
-    4. Tarjetas de producto (hover effects)
-    5. Validación de formularios (feedback visual)
-    6. Badges de estado (pedidos, tickets)
-    7. Sección Hero (landing page)
-    8. Carrito y tablas
-    9. Panel Admin
-    10. Animaciones y transiciones
-    11. Responsive (media queries)
-    ============================================================ */
+/* Estilos personalizados para la tienda. */
 
 
-  /* ============================================================
-    1. VARIABLES CSS - COLORES DE MARCA
-    ============================================================
-    Usamos CSS Custom Properties (variables) para mantener
-    consistencia en toda la aplicación. Si el cliente quiere
-    cambiar los colores, solo se modifican aquí.
-    
-    ¿POR QUÉ variables CSS y no SASS?
-    Porque este es un proyecto educativo simple. Las variables
-    CSS funcionan directamente en el navegador sin compilación.
-    ============================================================ */
+/* Variables CSS de marca y tema oscuro. */
 
 :root {
   /* Colores principales - Tema Oscuro Ensigna */
@@ -76,13 +46,7 @@
 }
 
 
-  /* ============================================================
-    2. ESTILOS GLOBALES
-    ============================================================
-    Estilos base que aplican a toda la página.
-    Sobrescriben los defaults del navegador y complementan
-    los resets de Bootstrap.
-    ============================================================ */
+/* Estilos globales base y overrides de Bootstrap. */
 body {
   font-family: var(--font-main);
   background-color: var(--color-bg);
@@ -110,14 +74,7 @@ a:hover {
 }
 
 
-  /* ============================================================
-    3. NAVBAR PERSONALIZADO
-    ============================================================
-    Sobrescribe los colores default de Bootstrap navbar.
-    Usamos nuestro azul marino oscuro como fondo.
-    La navbar se genera dinámicamente con JavaScript (loadNavbar)
-    pero los estilos se aplican con estas clases.
-    ============================================================ */
+/* Navbar personalizada y estilos de navegación. */
 .navbar-custom {
   background-color: var(--color-primary) !important;
   box-shadow: var(--shadow-md);
@@ -176,15 +133,7 @@ a:hover {
 }
 
 
-/* ============================================================
-    4. TARJETAS DE PRODUCTO
-    ============================================================
-    Las tarjetas usan .card de Bootstrap como base.
-    Añadimos efectos hover para que se "levanten" al pasar
-    el mouse, indicando al usuario que son clickeables.
-    
-    Referencia: Imagen 3 - Diagrama de catálogo de productos
-============================================================ */
+/* Tarjetas de producto con hover elegante. */
 .product-card {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -255,18 +204,7 @@ a:hover {
 }
 
 
-/* ============================================================
-  5. VALIDACIÓN DE FORMULARIOS - FEEDBACK VISUAL
-    ============================================================
-    Bootstrap ya provee .is-valid e .is-invalid para los inputs.
-    Aquí personalizamos los colores y añadimos estilos para
-    los mensajes de error/éxito debajo de cada campo.
-    
-    ¿CÓMO FUNCIONA?
-    JavaScript (auth.js, utils.js) añade/quita las clases
-    .is-valid / .is-invalid en tiempo real mientras el usuario
-    escribe. Estos estilos dan el feedback visual inmediato.
-    ============================================================ */
+/* Validación de formularios y feedback visual. */
 
 /* Mensaje de error debajo del input */
 .validation-message {
@@ -333,15 +271,7 @@ a:hover {
 }
 
 
-  /* ============================================================
-    6. BADGES DE ESTADO
-    ============================================================
-    Badges coloreados para mostrar el estado de pedidos y tickets.
-    Cada estado tiene un color semántico que el usuario asocia
-    intuitivamente (verde=bueno, rojo=malo, amarillo=esperar).
-    
-    Referencia: Imagen 5 - Diagrama de estados de pedidos
-    ============================================================ */
+/* Badges de estado para pedidos y tickets. */
 
 /* Pedidos */
 .badge-pendiente {
@@ -418,12 +348,7 @@ a:hover {
 }
 
 
-  /* ============================================================
-    7. SECCIÓN HERO - LANDING PAGE
-    ============================================================
-    Banner principal de la página de inicio (index.html).
-    Imagen de fondo con texto superpuesto y botón CTA.
-    ============================================================ */
+/* Sección hero de la landing page. */
 .hero-section {
   background-color: #0f172a; /* Slate 900 - Fondo oscuro profundo y sobrio */
   color: #ffffff;
@@ -470,12 +395,7 @@ a:hover {
 }
 
 
-  /* ============================================================
-    8. CARRITO Y TABLAS
-    ============================================================
-    Estilos para la tabla del carrito y las tablas de pedidos.
-    Bootstrap ya da estilos base con .table, aquí personalizamos.
-    ============================================================ */
+/* Estilos de carrito y tablas personalizados. */
 
 /* Imagen miniatura en la tabla del carrito */
 .cart-item-img {
@@ -523,14 +443,9 @@ a:hover {
 }
 
 
-  /* ============================================================
-    9. PANEL DE ADMINISTRACIÓN
-    ============================================================
-    Estilos específicos para las páginas del panel admin.
-    Tarjetas de estadísticas con iconos grandes y colores.
-    ============================================================ */
+/* Estilos del panel de administración. */
 
-  /* Tarjeta de estadística en el dashboard - Rediseño Profesional */
+/* Tarjeta de estadística en el dashboard */
 .stat-card {
   background-color: var(--color-card-bg) !important;
   color: var(--color-text) !important;
@@ -672,12 +587,7 @@ a:hover {
 }
 
 
-  /* ============================================================
-    10. ANIMACIONES Y TRANSICIONES
-    ============================================================
-    Animaciones sutiles para mejorar la experiencia del usuario.
-    No se abusa de ellas para mantener la página liviana.
-    ============================================================ */
+/* Animaciones y transiciones sutiles. */
 
 /* Animación de entrada - fade in con slide up */
 @keyframes fadeInUp {
@@ -755,13 +665,7 @@ a:hover {
 }
 
 
-  /* ============================================================
-    11. RESPONSIVE - MEDIA QUERIES
-    ============================================================
-    Ajustes para pantallas pequeñas (móviles y tablets).
-    Bootstrap ya maneja la mayoría del responsive con su grid,
-    aquí solo ajustamos detalles específicos de nuestros estilos.
-    ============================================================ */
+/* Ajustes responsive para móviles y tablets. */
 
 /* Tablets y móviles grandes (< 768px) */
 @media (max-width: 767.98px) {
@@ -809,11 +713,7 @@ a:hover {
 }
 
 
-  /* ============================================================
-    12. UTILIDADES ADICIONALES
-    ============================================================
-    Clases utilitarias que no provee Bootstrap y necesitamos.
-    ============================================================ */
+/* Utilidades adicionales para el frontend. */
 
 /* Cursor pointer para elementos clickeables */
 .cursor-pointer {
@@ -890,9 +790,7 @@ a:hover {
   font-size: 0.85rem;
   margin-top: auto;
 }
-/* ============================================================
-   ESTILOS MODO CLARO (SOLO PARA LA PÁGINA DE CATÁLOGO)
-   ============================================================ */
+/* Modo claro para catálogos */
 .modo-claro {
     background-color: #ffffff !important;
     color: #000000 !important;
@@ -925,14 +823,12 @@ a:hover {
     color: #000000;
 }
 
-/* Títulos principales */
+/* Títulos principales en modo claro */
 .modo-claro h2, 
 .modo-claro h3 {
     color: #000000 !important;
 }
-/* ============================================================
-   ESTILOS PARA FORMULARIOS DE LOGIN Y REGISTRO (ENSIGNA)
-   ============================================================ */
+/* Estilos de formulario de login/registro */
 
 /* Títulos del formulario ("Crear Cuenta", "Iniciar Sesión") */
 .form-card h2, 
