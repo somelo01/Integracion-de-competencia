@@ -867,6 +867,13 @@ const obtenerEstadisticas = async (req, res) => {
       success: true,
       message: 'Estadísticas obtenidas exitosamente.',
       data: {
+        totalProductos: productosResult[0].total,
+        totalPedidos: pedidosResult[0].total,
+        totalTickets: ticketsResult[0].total,
+        totalUsuarios: usuariosResult[0].total,
+        pedidosPendientes: pedidosPendientesResult[0].total,
+        ticketsAbiertos: ticketsAbiertosResult[0].total,
+        totalIngresos: parseFloat(ingresosResult[0].ingresos),
         productos: {
           total: productosResult[0].total,
           activos: productosActivosResult[0].total

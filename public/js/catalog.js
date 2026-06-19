@@ -149,7 +149,11 @@ async function searchProducts(query) {
     const response = await apiRequest(`/api/productos/buscar?q=${encodeURIComponent(query)}`);
 
     if (response.success && response.data) {
-      const products = Array.isArray(response.data) ? response.data : [];
+      const products = Array.isArray(response.data)
+        ? response.data
+        : Array.isArray(response.data?.productos)
+          ? response.data.productos
+          : [];
 
       if (products.length === 0) {
         grid.innerHTML = `
@@ -217,7 +221,11 @@ async function applyFilters() {
     const response = await apiRequest(`/api/productos/filtrar?${params.toString()}`);
 
     if (response.success && response.data) {
-      const products = Array.isArray(response.data) ? response.data : [];
+      const products = Array.isArray(response.data)
+        ? response.data
+        : Array.isArray(response.data?.productos)
+          ? response.data.productos
+          : [];
 
       if (products.length === 0) {
         grid.innerHTML = `
